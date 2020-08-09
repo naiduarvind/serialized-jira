@@ -1,48 +1,41 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
-	"strings"
-	"syscall"
 
-	jira "github.com/andygrunwald/go-jira"
-	"golang.org/x/crypto/ssh/terminal"
+	"github.com/andygrunwald/go-jira"
 )
 
 func main() {
-	r := bufio.NewReader(os.Stdin)
+	jqlFilter()
+}
 
-	fmt.Print("Jira URL: ")
-	jiraURL, _ := r.ReadString('\n')
+func establishClient() {
+	base := "https://thebilityengineer.atlassian.net"
 
-	fmt.Print("Jira Username: ")
-	username, _ := r.ReadString('\n')
-	fmt.Print("Jira username is ", username)
+	// TODO: Convert this to an ENV / Secrets Manager (depending on the infrastructure picked)
+	tp := jira.BasicAuthTransport{}
 
-	fmt.Print("Jira Password: ")
-	bytePassword, _ := terminal.ReadPassword(int(syscall.Stdin))
-	password := string(bytePassword)
+	jiraClient, err := jira.NewClient(tp.Client(), base)
+}
 
-	tp := jira.BasicAuthTransport{
-		Username: strings.TrimSpace(username),
-		Password: strings.TrimSpace(password),
-	}
-
-	client, err := jira.NewClient(tp.Client(), strings.TrimSpace(jiraURL))
+func jqlFilter() {
+	jql := "project = TBE and type = Task and Status IN ('In Progress')"
+	fmt.Printf("Usecase: Running a JQL query '%s'\n", jql)
+	issues, resp, err := establishClient.jiraClient.Issue.Search(jql, nil)
 	if err != nil {
-		fmt.Printf("\nerror: %v\n", err)
-		return
+		panic(err)
 	}
 
-	u, _, err := client.User.Get("f5c8ce98-1fd2-4368-89f1-0d34217d61e4")
+	outputResponse(issues, resp)
+}
 
-	if err != nil {
-		fmt.Printf("\nerror: %v\n", err)
-		return
+// TODO: Remove in favour of web forms through handlers
+func outputResponse(issues []jira.Issue, resp *jira.Response) {
+	fmt.Printf("Call to %s\n", resp.Request.URL)
+	fmt.Printf("Response Code: %d\n", resp.StatusCode)
+	fmt.Println("==================================")
+	for _, i := range issues {
+		fmt.Printf("%s (%s/%s): %+v\n", i.Key, i.Fields.Type.Name, i.Fields.Priority.Name, i.Fields.Summary)
 	}
-
-	fmt.Printf("\nEmail: %v\nSuccess!\n", u.EmailAddress)
-
 }
