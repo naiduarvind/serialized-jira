@@ -1,122 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Wilio Survey, Quotation, Review and Register form Wizard by Ansonika.">
+    <meta name="author" content="Ansonika">
     <title>The (*)bility Engineer's Serialized Jira</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--===============================================================================================-->
-    <link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="css/util.css">
-    <link rel="stylesheet" type="text/css" href="css/main.css">
-    <!--===============================================================================================-->
+
+    <!-- Favicons-->
+    <link rel="shortcut icon" href="../static/img/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" type="image/x-icon" href="/static/img/apple-touch-icon-57x57-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="/static/img/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="/static/img/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="/static/img/apple-touch-icon-144x144-precomposed.png">
+
+    <!-- GOOGLE WEB FONT -->
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,500,600" rel="stylesheet">
+
+    <!-- BASE CSS -->
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+	<link href="/static/css/menu.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+	<link href="../static/css/vendors.css" rel="stylesheet">
+
+    <!-- YOUR CUSTOM CSS -->
+    <link href="/static/css/custom.css" rel="stylesheet">
+	
+	<!-- MODERNIZR MENU -->
+	<script src="/static/js/modernizr.js"></script>
+
 </head>
+
 <body>
 
-<div class="container-contact100">
-    <div class="wrap-contact100">
-        <form action="/" method="POST" class="contact100-form validate-form">
-				<span class="contact100-form-title">
-					Backlog? Send it!
-				</span>
+	<div id="preloader">
+		<div data-loader="circle-side"></div>
+	</div><!-- /Preload -->
 
-            <div class="wrap-input100 validate-input" data-validate="Summary is required">
-                <span class="label-input100">Summary</span>
-                <input class="input100" type="text" name="summary" value="{{ .Summary }}" placeholder="Enter ticket summary">
-                <span class="focus-input100"></span>
-            </div>
+	<div id="loader_form">
+		<div data-loader="circle-side-2"></div>
+	</div><!-- /loader_form -->
 
-            <div class="wrap-input100 validate-input" data-validate = "URL Description is required">
-                <span class="label-input100">Description</span>
-                <input class="input100" type="text" name="description" value="{{ .Description }}" placeholder="Enter URL of material">
-                <span class="focus-input100"></span>
-            </div>
+	<div class="container-fluid full-height">
+		<div class="row row-height">
+			<div class="col-lg-6 content-left">
+				<div class="content-left-wrapper">
+					<a href="/" id="logo"><img src="/static/img/logo.svg" alt="" width="49" height="35"></a>
+					<div id="social">
+						<ul>
+							<li><a href="https://twitter.com/rvine_naidu"><i class="icon-twitter"></i></a></li>
+							<li><a href="https://www.instagram.com/vind42/"><i class="icon-instagram"></i></a></li>
+							<li><a href="https://github.com/naiduarvind"><i class="icon-github"></i></a></li>
+							<li><a href="https://linkedin.com/in/naiduarvind"><i class="icon-linkedin"></i></a></li>
+						</ul>
+					</div>
+					<!-- /social -->
+					<div>
+						<figure><img src="/static/img/info_graphic_1.svg" alt="" class="img-fluid"></figure>
+						<h2>Serialized Jira</h2>
+						<p>Interested in sharing something that you would like me to have a look?</p>
+						<p>Send it to my backlog on the right!</p>
+						<a href="https://thebility.engineer" class="btn_1 rounded">Head over to my blog!</a>
+					</div>
+					<div class="copy">© ALL RIGHTS RESERVED, ARVIND NAIDU. 2019 - 2020</div>
+				</div>
+				<!-- /content-left-wrapper -->
+			</div>
+			<!-- /content-left -->
 
-            <div class="wrap-input100 input100-select">
-                <span class="label-input100">Issue Type</span>
-                <div>
-                    <select class="selection-2" name="type">
-                        <option>Select Issue Type</option>
-                        <option value="Task">Task</option>
-                        <option value="Epic">Epic</option>
-                    </select>
-                </div>
-                <span class="focus-input100"></span>
-            </div>
+			<div class="col-lg-6 content-right" id="start">
+				<div id="wizard_container">
+						<form id="wrapped" method="POST">
+							<input id="website" name="website" type="text" value="">
+							<!-- Leave for security protection, read docs for details -->
+							<div id="middle-wizard">
+								<div class="step">
+									<h3 class="main_question">Fill in the details for the ticket</h3>
+									<div class="form-group">
+										<input type="text" name="summary" class="form-control required" placeholder="Summary">
+									</div>
+									<div class="form-group">
+										<input type="text" name="description" class="form-control required" placeholder="Description (URL)">
+									</div>
+									<div class="form-group">
+										<div class="styled-select clearfix">
+											<select class="wide required" name="type">
+												<option value="">Issue Type</option>
+												<option value="Task">Task</option>
+												<option value="Epic">Epic</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div id="bottom-wizard">
+									<button type="submit" name="process" class="submit">Submit</button>
+								</div>
+							</div>
+						</form>
+					</div>
+					<!-- /Wizard container -->
+			</div>
+			<!-- /content-right-->
+		</div>
+		<!-- /row-->
+	</div>
+	<!-- /container-fluid -->
+	
+	<!-- COMMON SCRIPTS -->
+	<script src="/static/js/jquery-3.2.1.min.js"></script>
+    <script src="/static/js/common_scripts.min.js"></script>
+	<script src="/static/js/velocity.min.js"></script>
+	<script src="/static/js/functions.js"></script>
 
-            <div class="wrap-input100 input100-select">
-                <span class="label-input100">Labels</span>
-                <div>
-                    <select class="selection-2" name="labels">
-                        <option>Select Labels</option>
-                        <option value="Courses">Courses</option>
-                        <option value="Articles">Articles</option>
-                        <option value="Whitepapers">Whitepapers</option>
-                        <option value="Books">Books</option>
-                        <option value="InfoQ">InfoQ</option>
-                        <option value="Videos">Videos</option>
-                        <option value="Documents">Documents</option>
-                    </select>
-                </div>
-                <span class="focus-input100"></span>
-            </div>
-
-
-            <div class="container-contact100-form-btn">
-                <div class="wrap-contact100-form-btn">
-                    <div class="contact100-form-bgbtn"></div>
-                    <button class="contact100-form-btn">
-							<span>
-								Create Ticket
-								<i class="fa fa-long-arrow-right m-l-7" aria-hidden="true"></i>
-							</span>
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-
-
-
-<div id="dropDownSelect1"></div>
-
-<!--===============================================================================================-->
-<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
-<!--===============================================================================================-->
-<script src="vendor/animsition/js/animsition.min.js"></script>
-<!--===============================================================================================-->
-<script src="vendor/bootstrap/js/popper.js"></script>
-<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-<!--===============================================================================================-->
-<script src="vendor/select2/select2.min.js"></script>
-<script>
-    $(".selection-2").select2({
-        minimumResultsForSearch: 20,
-        dropdownParent: $('#dropDownSelect1')
-    });
-</script>
-<!--===============================================================================================-->
-<script src="vendor/daterangepicker/moment.min.js"></script>
-<script src="vendor/daterangepicker/daterangepicker.js"></script>
-<!--===============================================================================================-->
-<script src="vendor/countdowntime/countdowntime.js"></script>
-<!--===============================================================================================-->
-<script src="js/main.js"></script>
 
 </body>
 </html>
