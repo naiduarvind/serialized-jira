@@ -55,6 +55,9 @@ func home(w http.ResponseWriter, r *http.Request) {
 			issue.Fields.Status.Name,
 			strings.Trim(fmt.Sprint(issue.Fields.Labels), "[]")})
 		checkError(err)
+
+		// TODO: Create a field in TicketData struct for output in (IN PROGRESS) table
+		fmt.Printf("%d% % ", issue.Fields.Progress.Percent)
 	}
 
 	render(w, "templates/index.html", td)
