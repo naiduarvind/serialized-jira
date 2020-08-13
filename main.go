@@ -13,6 +13,8 @@ type TicketData struct {
 	TicketKey string
 	TicketSummary string
 	TicketDescription string
+	TicketProgress string
+	TicketLabel []string
 }
 
 func main() {
@@ -46,7 +48,12 @@ func home(w http.ResponseWriter, r *http.Request) {
 	checkError(err)
 
 	for _, issue := range issues {
-		td = append(td, TicketData{TicketKey: issue.Key, TicketSummary: issue.Fields.Summary, TicketDescription: issue.Fields.Description})
+		td = append(td, TicketData{
+			issue.Key,
+			issue.Fields.Summary,
+			issue.Fields.Description,
+			issue.Fields.Status.Name,
+			issue.Fields.Labels})
 		checkError(err)
 	}
 
