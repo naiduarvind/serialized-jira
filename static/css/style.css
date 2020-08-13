@@ -542,6 +542,7 @@ input#website {
 
 #wizard_container {
   width: 400px;
+
 }
 @media (max-width: 767px) {
   #wizard_container {

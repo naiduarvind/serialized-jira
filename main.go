@@ -12,7 +12,6 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", home).Methods("GET")
 	r.HandleFunc("/", send).Methods("POST")
-	r.HandleFunc("/confirmation", confirmation).Methods("GET")
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static/"))))
 
 	log.Println("Listening...")
@@ -61,14 +60,6 @@ func send(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Sorry, something went wrong", http.StatusInternalServerError)
 		return
 	}
-
-	// TODO: Remove redirect to confirmation page, handle it as SPA
-	// Step 3: Redirect to confirmation page
-	http.Redirect(w, r, "/confirmation", http.StatusSeeOther)
-}
-
-func confirmation(w http.ResponseWriter, r *http.Request) {
-	render(w, "templates/confirmation.html", nil)
 }
 
 func render(w http.ResponseWriter, filename string, data interface{}) {

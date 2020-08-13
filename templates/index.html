@@ -10,7 +10,7 @@
     <title>The (*)bility Engineer's Serialized Jira</title>
 
     <!-- Favicons-->
-    <link rel="shortcut icon" href="../static/img/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/static/img/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" type="image/x-icon" href="/static/img/apple-touch-icon-57x57-precomposed.png">
     <link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="/static/img/apple-touch-icon-72x72-precomposed.png">
     <link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="/static/img/apple-touch-icon-114x114-precomposed.png">
@@ -72,17 +72,17 @@
 
 			<div class="col-lg-6 content-right" id="start">
 				<div id="wizard_container">
-						<form id="wrapped" method="POST">
+						<form action="/" id="wrapped" method="POST">
 							<input id="website" name="website" type="text" value="">
 							<!-- Leave for security protection, read docs for details -->
 							<div id="middle-wizard">
-								<div class="step">
+								<div class="submit step">
 									<h3 class="main_question">Fill in the details for the ticket</h3>
 									<div class="form-group">
-										<input type="text" name="summary" class="form-control required" placeholder="Summary">
+										<input type="text" name="summary" class="form-control required" placeholder="Summary" value="{{ .Summary }}">
 									</div>
 									<div class="form-group">
-										<input type="text" name="description" class="form-control required" placeholder="Description (URL)">
+										<input type="text" name="description" class="form-control required" placeholder="Description (URL)" value="{{ .Description }}">
 									</div>
 									<div class="form-group">
 										<div class="styled-select clearfix">
@@ -95,7 +95,7 @@
 									</div>
 								</div>
 								<div id="bottom-wizard">
-									<button type="submit" name="process" class="submit">Submit</button>
+									<button type="submit" class="submit">Submit</button>
 								</div>
 							</div>
 						</form>
