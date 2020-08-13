@@ -103,7 +103,6 @@
 						<!-- Table header -->
 						<thead>
 						<tr>
-							<th scope="col">Key</th>
 							<th scope="col">Summary</th>
 							<th scope="col">Status</th>
 							<th scope="col">Label</th>
@@ -113,7 +112,6 @@
 						<tbody>
 						{{ range . }}
 							<tr>
-								<td>{{ .TicketKey }}</td>
 								<td><a href="{{ .TicketDescription }}">{{ .TicketSummary }}</a></td>
 								<td>{{ .TicketProgress }}</td>
 								<td>{{ .TicketLabel }}</td>

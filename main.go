@@ -1,20 +1,21 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
+	"strings"
 
-	"github.com/gorilla/mux"
 	"github.com/andygrunwald/go-jira"
+	"github.com/gorilla/mux"
 )
 
 type TicketData struct {
-	TicketKey string
 	TicketSummary string
 	TicketDescription string
 	TicketProgress string
-	TicketLabel []string
+	TicketLabel string
 }
 
 func main() {
@@ -49,11 +50,10 @@ func home(w http.ResponseWriter, r *http.Request) {
 
 	for _, issue := range issues {
 		td = append(td, TicketData{
-			issue.Key,
 			issue.Fields.Summary,
 			issue.Fields.Description,
 			issue.Fields.Status.Name,
-			issue.Fields.Labels})
+			strings.Trim(fmt.Sprint(issue.Fields.Labels), "[]")})
 		checkError(err)
 	}
 
