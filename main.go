@@ -6,12 +6,20 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/andygrunwald/go-jira"
 )
+
+type TicketData struct {
+	TicketKey string
+	TicketSummary string
+	TicketDescription string
+}
 
 func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", home).Methods("GET")
 	r.HandleFunc("/", send).Methods("POST")
+	r.HandleFunc("/confirmation", confirmation).Methods("GET")
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static/"))))
 
 	log.Println("Listening...")
@@ -20,27 +28,33 @@ func main() {
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
-	render(w, "templates/index.html", nil)
 
-	// TODO: Figure an appropriate way to print out "In Progress" items in tabular form
-	//base := "https://thebilityengineer.atlassian.net"
-	//
-	//tp := jira.BasicAuthTransport{
-	//	Username: "techmaxed.net@gmail.com",
-	//	Password: "a0jf3hW8TtJmSxc7JBQi7281",
-	//}
-	//jiraClient, err := jira.NewClient(tp.Client(), base)
-	//checkError(err)
-	//
-	//jql := "project = TBE and type = Task and Status IN ('In Progress')"
-	//
-	//issues, _, err := jiraClient.Issue.Search(jql, nil)
-	//checkError(err)
-	//
-	//for _, i := range issues {
-	//	_, err := fmt.Fprintf(w, "(%s) - %+v : %s\n", i.Key, i.Fields.Summary, i.Fields.Description)
-	//	checkError(err)
-	//}
+	var td []TicketData
+
+	base := "https://thebilityengineer.atlassian.net"
+
+	tp := jira.BasicAuthTransport{
+		Username: "techmaxed.net@gmail.com",
+		Password: "a0jf3hW8TtJmSxc7JBQi7281",
+	}
+	jiraClient, err := jira.NewClient(tp.Client(), base)
+	checkError(err)
+
+	jql := "project = TBE and type = Task and Status IN ('In Progress')"
+
+	issues, _, err := jiraClient.Issue.Search(jql, nil)
+	checkError(err)
+
+	for _, issue := range issues {
+		td = append(td, TicketData{TicketKey: issue.Key, TicketSummary: issue.Fields.Summary, TicketDescription: issue.Fields.Description})
+		checkError(err)
+	}
+
+	render(w, "templates/index.html", td)
+}
+
+func confirmation(w http.ResponseWriter, r *http.Request) {
+	render(w, "templates/confirmation.html", nil)
 }
 
 func send(w http.ResponseWriter, r *http.Request) {
@@ -60,6 +74,8 @@ func send(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Sorry, something went wrong", http.StatusInternalServerError)
 		return
 	}
+
+	http.Redirect(w, r, "/confirmation", http.StatusSeeOther)
 }
 
 func render(w http.ResponseWriter, filename string, data interface{}) {
