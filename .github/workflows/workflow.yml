@@ -10,4 +10,4 @@ jobs:
       - name: run
         uses: ngalaiko/bazel-action/1.2.1@master
         with:
-          args: build //...
+          args: run //:gazelle -- update-repos -from_file=go.mod
