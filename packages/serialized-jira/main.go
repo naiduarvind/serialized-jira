@@ -35,18 +35,9 @@ func home(w http.ResponseWriter, r *http.Request) {
 
 	var td []TicketData
 
-	base := "https://thebilityengineer.atlassian.net"
+	jql := "project = TBE and type = Task and Status IN ('In Progress') AND createdDate <= startOfWeek()"
 
-	tp := jira.BasicAuthTransport{
-		Username: "techmaxed.net@gmail.com",
-		Password: "a0jf3hW8TtJmSxc7JBQi7281",
-	}
-	jiraClient, err := jira.NewClient(tp.Client(), base)
-	checkError(err)
-
-	jql := "project = TBE and type = Task and Status IN ('In Progress')"
-
-	issues, _, err := jiraClient.Issue.Search(jql, nil)
+	issues, _, err := establishClient().Issue.Search(jql, nil)
 	checkError(err)
 
 	for _, issue := range issues {
@@ -98,6 +89,19 @@ func render(w http.ResponseWriter, filename string, data interface{}) {
 		log.Println(err)
 		http.Error(w, "Sorry, something went wrong", http.StatusInternalServerError)
 	}
+}
+
+func establishClient() *jira.Client {
+	base := "https://thebilityengineer.atlassian.net"
+
+	tp := jira.BasicAuthTransport{
+		Username: "techmaxed.net@gmail.com",
+		Password: "a0jf3hW8TtJmSxc7JBQi7281",
+	}
+	jiraClient, err := jira.NewClient(tp.Client(), base)
+	checkError(err)
+
+	return jiraClient
 }
 
 func checkError(err error) {

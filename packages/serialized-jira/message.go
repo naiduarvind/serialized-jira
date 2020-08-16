@@ -38,18 +38,6 @@ func (msg *Message) Validate() bool {
 }
 
 func (msg *Message) Deliver() error {
-	// TODO: Abstract to a single call for instantiating client
-	base := "https://thebilityengineer.atlassian.net"
-
-	tp := jira.BasicAuthTransport{
-		Username: "techmaxed.net@gmail.com",
-		Password: "a0jf3hW8TtJmSxc7JBQi7281",
-	}
-	jiraClient, err := jira.NewClient(tp.Client(), base)
-	if err != nil {
-		panic(err)
-	}
-
 	i := jira.Issue{
 		Fields: &jira.IssueFields{
 			Description: msg.Description,
@@ -63,7 +51,7 @@ func (msg *Message) Deliver() error {
 		},
 	}
 
-	issue, _, err := jiraClient.Issue.Create(&i)
+	issue, _, err := establishClient().Issue.Create(&i)
 	checkError(err)
 
 	// TODO: Remove printing to console
