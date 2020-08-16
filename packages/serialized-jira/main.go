@@ -14,8 +14,9 @@ import (
 type TicketData struct {
 	TicketSummary string
 	TicketDescription string
-	TicketProgress string
+	TicketStatus string
 	TicketLabel string
+	TicketProgress int
 }
 
 func main() {
@@ -53,11 +54,9 @@ func home(w http.ResponseWriter, r *http.Request) {
 			issue.Fields.Summary,
 			issue.Fields.Description,
 			issue.Fields.Status.Name,
-			strings.Trim(fmt.Sprint(issue.Fields.Labels), "[]")})
+			strings.Trim(fmt.Sprint(issue.Fields.Labels), "[]"),
+			issue.Fields.Progress.Percent})
 		checkError(err)
-
-		// TODO: Create a field in TicketData struct for output in (IN PROGRESS) table
-		fmt.Printf("%d% % ", issue.Fields.Progress.Percent)
 	}
 
 	render(w, "templates/index.html", td)

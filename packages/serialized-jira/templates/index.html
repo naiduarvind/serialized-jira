@@ -105,6 +105,7 @@
 						<tr>
 							<th scope="col">Summary</th>
 							<th scope="col">Status</th>
+							<th scope="col">Progress</th>
 							<th scope="col">Label</th>
 						</tr>
 						</thead>
@@ -113,7 +114,8 @@
 						{{ range . }}
 							<tr>
 								<td><a href="{{ .TicketDescription }}">{{ .TicketSummary }}</a></td>
-								<td>{{ .TicketProgress }}</td>
+								<td>{{ .TicketStatus }}</td>
+								<td>{{ .TicketProgress }}%</td>
 								<td>{{ .TicketLabel }}</td>
 							</tr>
 						{{ end }}
