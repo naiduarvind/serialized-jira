@@ -152,8 +152,8 @@ go_repository(
 )
 
 go_repository(
-    name = "com_github_sony_gobreaker",
-    importpath = "github.com/sony/gobreaker",
-    sum = "h1:oMnRNZXX5j85zso6xCPRNPtmAycat+WcoKbklScLDgQ=",
-    version = "v0.4.1",
+    name = "com_github_slok_goresilience",
+    importpath = "github.com/slok/goresilience",
+    sum = "h1:dagdIiWlhTm7BK/r/LRKz+zvw0SCNk+nHf7obdsbzxQ=",
+    version = "v0.2.0",
 )
