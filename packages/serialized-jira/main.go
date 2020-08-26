@@ -62,10 +62,10 @@ func send(w http.ResponseWriter, r *http.Request) {
 		Type: r.PostFormValue("type"),
 	}
 
-	if msg.Validate() == false {
-		render(w, "templates/index.html", msg)
-		return
-	}
+	//if msg.Validate() == false {
+	//	render(w, "templates/index.html", msg)
+	//	return
+	//}
 
 	if err := tickInfo.createTicket(); err != nil {
 		log.Println(err)
