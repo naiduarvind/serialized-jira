@@ -56,7 +56,7 @@ func confirmation(w http.ResponseWriter, r *http.Request) {
 }
 
 func send(w http.ResponseWriter, r *http.Request) {
-	msg := &Message{
+	tickInfo := &ticketInformation{
 		Summary:   r.PostFormValue("summary"),
 		Description: r.PostFormValue("description"),
 		Type: r.PostFormValue("type"),
@@ -67,7 +67,7 @@ func send(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := msg.Deliver(); err != nil {
+	if err := tickInfo.createTicket(); err != nil {
 		log.Println(err)
 		http.Error(w, "Sorry, something went wrong", http.StatusInternalServerError)
 		return
