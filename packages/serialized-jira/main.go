@@ -14,7 +14,6 @@ import (
 type TicketData struct {
 	TicketSummary string
 	TicketDescription string
-	TicketStatus string
 	TicketLabel string
 	TicketProgress int
 }
@@ -44,7 +43,6 @@ func home(w http.ResponseWriter, r *http.Request) {
 		td = append(td, TicketData{
 			issue.Fields.Summary,
 			issue.Fields.Description,
-			issue.Fields.Status.Name,
 			strings.Trim(fmt.Sprint(issue.Fields.Labels), "[]"),
 			issue.Fields.Progress.Percent})
 		checkError(err)
@@ -94,6 +92,7 @@ func render(w http.ResponseWriter, filename string, data interface{}) {
 func establishClient() *jira.Client {
 	base := "https://thebilityengineer.atlassian.net"
 
+	// TODO: temporary creds -- to be replaced with env variables
 	tp := jira.BasicAuthTransport{
 		Username: "techmaxed.net@gmail.com",
 		Password: "a0jf3hW8TtJmSxc7JBQi7281",

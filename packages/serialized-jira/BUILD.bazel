@@ -12,6 +12,7 @@ go_library(
     deps = [
         "@com_github_andygrunwald_go_jira//:go_default_library",
         "@com_github_gorilla_mux//:go_default_library",
+        "@com_github_sony_gobreaker//:go_default_library",
     ],
 )
 

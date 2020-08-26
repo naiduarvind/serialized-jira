@@ -43,6 +43,7 @@ load(
     "@io_bazel_rules_docker//repositories:repositories.bzl",
     container_repositories = "repositories",
 )
+
 container_repositories()
 
 load("@io_bazel_rules_docker//repositories:deps.bzl", container_deps = "deps")
@@ -148,4 +149,11 @@ go_repository(
     importpath = "golang.org/x/text",
     sum = "h1:g61tztE5qeGQ89tm6NTjjM9VPIm088od1l6aSorWRWg=",
     version = "v0.3.0",
+)
+
+go_repository(
+    name = "com_github_sony_gobreaker",
+    importpath = "github.com/sony/gobreaker",
+    sum = "h1:oMnRNZXX5j85zso6xCPRNPtmAycat+WcoKbklScLDgQ=",
+    version = "v0.4.1",
 )

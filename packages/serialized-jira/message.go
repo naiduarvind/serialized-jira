@@ -6,8 +6,10 @@ import (
 	"strings"
 
 	"github.com/andygrunwald/go-jira"
+	"github.com/sony/gobreaker"
 )
 
+var cb *gobreaker.CircuitBreaker
 var rxURL = regexp.MustCompile("(?:(?:https?|ftp):\\/\\/)?[\\w/\\-?=%.]+\\.[\\w/\\-?=%.]+")
 
 type Message struct {
@@ -51,11 +53,22 @@ func (msg *Message) Deliver() error {
 		},
 	}
 
-	issue, _, err := establishClient().Issue.Create(&i)
-	checkError(err)
+	//issue, _, err := establishClient().Issue.Create(&i)
+	//checkError(err)
+	//
+	//// TODO: Remove printing to console
+	//fmt.Printf("%s: %+v\n", issue.Key, i.Fields.Summary)
+	//
+	//return err
 
-	// TODO: Remove printing to console
-	fmt.Printf("%s: %+v\n", issue.Key, i.Fields.Summary)
+	_, err := cb.Execute(func() (interface{}, error) {
+		issue, _, err := establishClient().Issue.Create(&i)
+		checkError(err)
+		
+		fmt.Printf("%s: %+v\n", issue.Key, i.Fields.Summary)
+
+		return err, nil
+	})
 
 	return err
 }
