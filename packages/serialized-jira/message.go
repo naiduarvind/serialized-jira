@@ -2,13 +2,10 @@ package main
 
 import (
 	"context"
-	"regexp"
 
 	"github.com/andygrunwald/go-jira"
 	"github.com/slok/goresilience/circuitbreaker"
 )
-
-var rxURL = regexp.MustCompile("(?:(?:https?|ftp):\\/\\/)?[\\w/\\-?=%.]+\\.[\\w/\\-?=%.]+")
 
 type ticketInformation struct {
 	Summary   string
