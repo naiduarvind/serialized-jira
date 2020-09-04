@@ -27,6 +27,7 @@
 
     <!-- YOUR CUSTOM CSS -->
     <link href="../static/css/custom.css" rel="stylesheet">
+	<link href="../static/css/table.css" rel="stylesheet">
 	
 	<!-- MODERNIZR MENU -->
 	<script src="../static/js/modernizr.js"></script>
@@ -70,56 +71,84 @@
 			</div>
 			<!-- /content-left -->
 
-			<div class="col-lg-6 content-right" id="start">
-				<div id="wizard_container">
-						<form action="/" id="wrapped" method="POST">
-							<input id="website" name="website" type="text" value="">
-							<!-- Leave for security protection, read docs for details -->
-							<div id="middle-wizard">
-								<div class="submit step">
-									<h3 class="main_question">Fill the details of the content!</h3>
-									<div class="form-group">
-										<input type="text" name="summary" class="form-control required" placeholder="Content Title">
-									</div>
-									<div class="form-group">
-										<input type="text" name="description" class="form-control required" placeholder="Content URL">
-									</div>
-									<div class="form-group">
-										<div class="styled-select clearfix">
-											<select class="wide required" name="type">
-												<option value="">Issue Type</option>
-												<option value="Task">Task (Articles, Videos, Whitepapers)</option>
-												<option value="Epic">Epic (Books)</option>
-											</select>
-										</div>
-									</div>
+			<div class="col-lg-6 content-right">
+				<div>
+					<form action="/" id="wrapped" method="POST">
+						<input id="website" name="website" type="text" value="">
+						<!-- Leave for security protection, read docs for details -->
+						<div id="middle-wizard">
+							<div class="submit step">
+								<h3 class="main_question">Fill the details of the content!</h3>
+								<div class="form-group">
+									<input type="text" name="summary" class="form-control required" placeholder="Content Title">
 								</div>
-								<div id="bottom-wizard">
-									<button type="submit" class="submit">Submit</button>
+								<div class="form-group">
+									<input type="text" name="description" class="form-control required" placeholder="Content URL">
+								</div>
+								<div class="form-group">
+									<div class="styled-select clearfix">
+										<select class="wide required" name="type">
+											<option value="">Issue Type</option>
+											<option value="Task">Task (Articles, Videos, Whitepapers)</option>
+											<option value="Epic">Epic (Books)</option>
+										</select>
+									</div>
 								</div>
 							</div>
-						</form>
-					<table >
-						<!-- Table header -->
-						<thead>
-						<tr>
-							<th scope="col">Summary</th>
-							<th scope="col">Progress</th>
-							<th scope="col">Label</th>
-						</tr>
-						</thead>
-						<!-- Table body -->
-						<tbody>
-						{{ range . }}
-							<tr>
-								<td><a href="{{ .TicketDescription }}">{{ .TicketSummary }}</a></td>
-								<td>{{ .TicketProgress }}%</td>
-								<td>{{ .TicketLabel }}</td>
-							</tr>
-						{{ end }}
-						</tbody>
-					</table>
-					</div>
+							<div id="bottom-wizard">
+								<button type="submit" class="submit">Submit</button>
+							</div>
+						</div>
+					</form>
+
+					<div class="main-content">
+						<div class="container mt-7">
+							<div class="col">
+								<div class="card shadow">
+									<div class="card-header border-0">
+										<h3 class="mb-0">Learning in Progress!</h3>
+									</div>
+									<div class="table-responsive">
+										<table class="table align-items-center table-flush">
+											<thead class="thead-light">
+											<tr>
+												<th scope="col">Summary</th>
+												<th scope="col">Progress</th>
+												<th scope="col">Label</th>
+											</tr>
+											</thead>
+											<tbody>
+											{{ range . }}
+												<tr>
+													<th scope="row">
+														<div class="media align-items-center">
+															<div class="media-body">
+																<span class="mb-0 text-sm">{{ .TicketSummary }}</span>
+															</div>
+														</div>
+													</th>
+													<td>
+														<div class="d-flex align-items-center">
+															<span class="mr-2">{{ .TicketProgress }}%</span>
+															<div>
+																<div class="progress">
+																	<div class="progress-bar bg-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{ .TicketProgress }}%;"></div>
+																</div>
+															</div>
+														</div>
+													</td>
+													<td>
+														{{ .TicketLabel }}
+													</td>
+												</tr>
+											{{ end }}
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+				</div>
 					<!-- /Wizard container -->
 			</div>
 			<!-- /content-right-->
@@ -133,7 +162,6 @@
     <script src="../static/js/common_scripts.min.js"></script>
 	<script src="../static/js/velocity.min.js"></script>
 	<script src="../static/js/functions.js"></script>
-
 
 </body>
 </html>
