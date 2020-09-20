@@ -31,11 +31,11 @@ jobs:
 
       - name: Build Artifacts
         run: |
-          bazel build //...
+          bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //packages/serialized-jira:serialized-jira
 
       - name: Upload Artifacts
         uses: skx/github-action-publish-binaries@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: '${GITHUB_WORKSPACE}/bazel-out/darwin-fastbuild/bin/packages/serialized-jira/serialized-jira_/serialized-jira'
+          args: '${GITHUB_WORKSPACE}/bazel-bin/packages/serialized-jira/serialized-jira_/serialized-jira'
