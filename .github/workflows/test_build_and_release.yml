@@ -1,3 +1,4 @@
+
 name: test_build_and_release
 
 on:
@@ -12,7 +13,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-	    - name: Checkout Repository
+      - name: Checkout Repository
         uses: actions/checkout@v2
 
       - name: Mount Build Cache
@@ -22,7 +23,7 @@ jobs:
           key: bazel
 
       - name: Install Bazelisk
-        uses: vsco/bazelisk-action@v1.0.0
+        uses: vsco/bazelisk-action@v1.1
         with:
           version: '1.5.0'
           bazel-install-path: './.local/bin'
