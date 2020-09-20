@@ -291,7 +291,7 @@ h3,
 
 .table th,
 .table td {
-    padding: 1rem;
+    padding: 0.5rem;
     vertical-align: top;
     border-top: 1px solid #e9ecef;
 }
@@ -504,7 +504,6 @@ a.btn.disabled {
 
 .card-header {
     margin-bottom: 0;
-    padding: 1.25rem 1.5rem;
     border-bottom: 1px solid rgba(0, 0, 0, .05);
     background-color: #fff;
 }
@@ -919,7 +918,7 @@ button.bg-default:focus {
 }
 
 .mt-7 {
-    margin-top: 6rem !important;
+    margin-top: 2rem !important;
 }
 
 .py-4 {
@@ -1241,7 +1240,8 @@ a.btn-icon-only {
 }
 
 .main-content {
-    position: relative;
+    margin: auto;
+    margin-bottom: 2rem !important;
 }
 
 .dropdown {

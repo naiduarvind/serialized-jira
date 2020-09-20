@@ -1,167 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Wilio Survey, Quotation, Review and Register form Wizard by Ansonika.">
     <meta name="author" content="Ansonika">
     <title>The (*)bility Engineer's Serialized Jira</title>
-
     <!-- Favicons-->
     <link rel="shortcut icon" href="../static/img/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" type="image/x-icon" href="../static/img/apple-touch-icon-57x57-precomposed.png">
     <link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="../static/img/apple-touch-icon-72x72-precomposed.png">
     <link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="../static/img/apple-touch-icon-114x114-precomposed.png">
     <link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="../static/img/apple-touch-icon-144x144-precomposed.png">
-
     <!-- GOOGLE WEB FONT -->
     <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,500,600" rel="stylesheet">
-
     <!-- BASE CSS -->
     <link href="../static/css/bootstrap.css" rel="stylesheet">
-	<link href="../static/css/menu.css" rel="stylesheet">
+    <link href="../static/css/menu.css" rel="stylesheet">
     <link href="../static/css/style.css" rel="stylesheet">
-	<link href="../static/css/vendors.css" rel="stylesheet">
-
+    <link href="../static/css/vendors.css" rel="stylesheet">
     <!-- YOUR CUSTOM CSS -->
     <link href="../static/css/custom.css" rel="stylesheet">
-	<link href="../static/css/table.css" rel="stylesheet">
-	
-	<!-- MODERNIZR MENU -->
-	<script src="../static/js/modernizr.js"></script>
-
-</head>
-
-<body>
-
-	<div id="preloader">
-		<div data-loader="circle-side"></div>
-	</div><!-- /Preload -->
-
-	<div id="loader_form">
-		<div data-loader="circle-side-2"></div>
-	</div><!-- /loader_form -->
-
-	<div class="container-fluid full-height">
-		<div class="row row-height">
-			<div class="col-lg-6 content-left">
-				<div class="content-left-wrapper">
-					<a href="/" id="logo"><img src="../static/img/logo.svg" alt="" width="49" height="35"></a>
-					<div id="social">
-						<ul>
-							<li><a href="https://twitter.com/rvine_naidu"><i class="icon-twitter"></i></a></li>
-							<li><a href="https://www.instagram.com/vind42/"><i class="icon-instagram"></i></a></li>
-							<li><a href="https://github.com/naiduarvind"><i class="icon-github"></i></a></li>
-							<li><a href="https://linkedin.com/in/naiduarvind"><i class="icon-linkedin"></i></a></li>
-						</ul>
-					</div>
-					<!-- /social -->
-					<div>
-						<figure><img src="../static/img/info_graphic_1.svg" alt="" class="img-fluid"></figure>
-						<h2>Serialized Jira</h2>
-						<p>Interested in sharing something that you would like me to have a look?</p>
-						<p>Send it to my backlog on the right!</p>
-						<a href="https://thebility.engineer" class="btn_1 rounded">Head over to my blog!</a>
-					</div>
-					<div class="copy">© ALL RIGHTS RESERVED, ARVIND NAIDU. 2019 - 2020</div>
-				</div>
-				<!-- /content-left-wrapper -->
-			</div>
-			<!-- /content-left -->
-
-			<div class="col-lg-6 content-right">
-				<div>
-					<form action="/" id="wrapped" method="POST">
-						<input id="website" name="website" type="text" value="">
-						<!-- Leave for security protection, read docs for details -->
-						<div id="middle-wizard">
-							<div class="submit step">
-								<h3 class="main_question">Fill the details of the content!</h3>
-								<div class="form-group">
-									<input type="text" name="summary" class="form-control required" placeholder="Content Title">
-								</div>
-								<div class="form-group">
-									<input type="text" name="description" class="form-control required" placeholder="Content URL">
-								</div>
-								<div class="form-group">
-									<div class="styled-select clearfix">
-										<select class="wide required" name="type">
-											<option value="">Issue Type</option>
-											<option value="Task">Task (Articles, Videos, Whitepapers)</option>
-											<option value="Epic">Epic (Books)</option>
-										</select>
-									</div>
-								</div>
-							</div>
-							<div id="bottom-wizard">
-								<button type="submit" class="submit">Submit</button>
-							</div>
-						</div>
-					</form>
-
-					<div class="main-content">
-						<div class="container mt-7">
-							<div class="col">
-								<div class="card shadow">
-									<div class="card-header border-0">
-										<h3 class="mb-0">Learning in Progress!</h3>
-									</div>
-									<div class="table-responsive">
-										<table class="table align-items-center table-flush">
-											<thead class="thead-light">
-											<tr>
-												<th scope="col">Summary</th>
-												<th scope="col">Progress</th>
-												<th scope="col">Label</th>
-											</tr>
-											</thead>
-											<tbody>
-											{{ range . }}
-												<tr>
-													<th scope="row">
-														<div class="media align-items-center">
-															<div class="media-body">
-																<span class="mb-0 text-sm">{{ .TicketSummary }}</span>
-															</div>
-														</div>
-													</th>
-													<td>
-														<div class="d-flex align-items-center">
-															<span class="mr-2">{{ .TicketProgress }}%</span>
-															<div>
-																<div class="progress">
-																	<div class="progress-bar bg-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{ .TicketProgress }}%;"></div>
-																</div>
-															</div>
-														</div>
-													</td>
-													<td>
-														{{ .TicketLabel }}
-													</td>
-												</tr>
-											{{ end }}
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-						</div>
-				</div>
-					<!-- /Wizard container -->
-			</div>
-			<!-- /content-right-->
-		</div>
-		<!-- /row-->
-	</div>
+    <link href="../static/css/table.css" rel="stylesheet">
+    <!-- MODERNIZR MENU -->
+    <script src="../static/js/modernizr.js"></script>
+  </head>
+  <body>
+    <div id="preloader">
+      <div data-loader="circle-side"></div>
+    </div>
+    <!-- /Preload -->
+    <div id="loader_form">
+      <div data-loader="circle-side-2"></div>
+    </div>
+    <!-- /loader_form -->
+    <div class="container-fluid full-height">
+    <div class="row">
+      <div class="col-lg-6 content-left">
+        <div class="content-left-wrapper">
+          <a href="/" id="logo"><img src="../static/img/logo.svg" alt="" width="49" height="35"></a>
+          <div id="social">
+            <ul>
+              <li><a href="https://twitter.com/rvine_naidu"><i class="icon-twitter"></i></a></li>
+              <li><a href="https://www.instagram.com/vind42/"><i class="icon-instagram"></i></a></li>
+              <li><a href="https://github.com/naiduarvind"><i class="icon-github"></i></a></li>
+              <li><a href="https://linkedin.com/in/naiduarvind"><i class="icon-linkedin"></i></a></li>
+            </ul>
+          </div>
+          <!-- /social -->
+          <div>
+            <figure><img src="../static/img/info_graphic_1.svg" alt="" class="img-fluid"></figure>
+            <h2>Serialized Jira</h2>
+            <p>Interested in sharing something that you would like me to have a look?</p>
+            <p>Send it to my backlog on the right!</p>
+            <a href="https://thebility.engineer" class="btn_1 rounded">Head over to my blog!</a>
+          </div>
+          <div class="copy">© ALL RIGHTS RESERVED, ARVIND NAIDU. 2019 - 2020</div>
+        </div>
+        <!-- /content-left-wrapper -->
+      </div>
+      <!-- /content-left -->
+      <div class="col-lg-6 content-right">
+        <div>
+          <form action="/" id="wrapped" method="POST">
+            <input id="website" name="website" type="text" value="">
+            <!-- Leave for security protection, read docs for details -->
+            <div id="middle-wizard">
+              <div class="submit step">
+                <h3 class="main_question">Fill the details of the content!</h3>
+                <div class="form-group">
+                  <input type="text" name="summary" class="form-control required" placeholder="Content Title">
+                </div>
+                <div class="form-group">
+                  <input type="text" name="description" class="form-control required" placeholder="Content URL">
+                </div>
+                <div class="form-group">
+                  <div class="styled-select clearfix">
+                    <select class="wide required" name="type">
+                      <option value="">Issue Type</option>
+                      <option value="Task">Task (Articles, Videos, Whitepapers)</option>
+                      <option value="Epic">Epic (Books)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div id="bottom-wizard">
+                <button type="submit" class="submit">Submit</button>
+              </div>
+            </div>
+          </form>
+          <!-- /Wizard container -->
+        </div>
+        <!-- /content-right-->
+      </div>
+      <!-- /row-->
+    </div>
 	<!-- /container-fluid -->
-	
-	<!-- COMMON SCRIPTS -->
-	<script src="../static/js/jquery-3.2.1.min.js"></script>
+	<div class="row">
+        <div class="main-content">
+          <div class="container mt-7">
+            <div class="col">
+              <div class="card shadow">
+                <div class="card-header border-0">
+                  <h3 class="mb-0">Learning in Progress...</h3>
+                </div>
+                <div class="table-responsive">
+                  <table class="table align-items-center table-flush">
+                    <thead class="thead-light">
+                      <tr>
+                        <th scope="col">Summary</th>
+                        <th scope="col">Progress</th>
+                        <th scope="col">Label</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{ range . }}
+                      <tr>
+                        <th scope="row">
+                          <div class="media align-items-center">
+                            <div class="media-body">
+                              <span class="mb-0 text-sm"><a href={{ .TicketDescription }}>{{ .TicketSummary }}</a></span>
+                            </div>
+                          </div>
+                        </th>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <span class="mr-2">{{ .TicketProgress }}%</span>
+                            <div>
+                              <div class="progress">
+                                <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{ .TicketProgress }}%;"></div>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          {{ .TicketLabel }}
+                        </td>
+                      </tr>
+                      {{ end }}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- COMMON SCRIPTS -->
+    <script src="../static/js/jquery-3.2.1.min.js"></script>
     <script src="../static/js/common_scripts.min.js"></script>
-	<script src="../static/js/velocity.min.js"></script>
-	<script src="../static/js/functions.js"></script>
-
-</body>
+    <script src="../static/js/velocity.min.js"></script>
+    <script src="../static/js/functions.js"></script>
+  </body>
 </html>
