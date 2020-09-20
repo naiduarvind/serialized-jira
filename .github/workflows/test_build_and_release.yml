@@ -38,4 +38,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: '${GITHUB_WORKSPACE}/bazel-bin/packages/serialized-jira/serialized-jira_/serialized-jira'
+          args: '/home/runner/work/serialized-jira/serialized-jira/bazel-bin/packages/serialized-jira/serialized-jira_/serialized-jira'
