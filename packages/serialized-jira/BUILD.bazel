@@ -22,9 +22,9 @@ go_binary(
     visibility = ["//visibility:public"],
 )
 
-container_image(
-    name = "image",
-    base = "@alpine_linux_amd64//image",
-    entrypoint = ["/serialized-jira"],
-    files = [":serialized-jira"],
-)
+# container_image(
+#     name = "image",
+#     base = "@alpine_linux_amd64//image",
+#     entrypoint = ["/serialized-jira"],
+#     files = [":serialized-jira"],
+# )
