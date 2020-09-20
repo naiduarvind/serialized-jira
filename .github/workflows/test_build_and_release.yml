@@ -31,7 +31,7 @@ jobs:
 
       - name: Build Artifacts
         run: |
-          "${GITHUB_WORKSPACE}/bin/bazel" build //...
+          bazel build //...
 
       - name: Upload Artifacts
         uses: skx/github-action-publish-binaries@master
