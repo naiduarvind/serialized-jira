@@ -12,29 +12,29 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-	      - name: Checkout Repository
+	    - name: Checkout Repository
         uses: actions/checkout@v2
 
-        - name: Mount Build Cache
+      - name: Mount Build Cache
         uses: actions/cache@v1
         with:
           path: "/home/runner/.cache/bazel"
           key: bazel
 
-        - name: Install Bazelisk
-          uses: vsco/bazelisk-action@v1.0.0
-          with:
-            version: '1.5.0'
-            bazel-install-path: './.local/bin'
-            os: 'linux'
+      - name: Install Bazelisk
+        uses: vsco/bazelisk-action@v1.0.0
+        with:
+          version: '1.5.0'
+          bazel-install-path: './.local/bin'
+          os: 'linux'
 
-        - name: Build Artifacts
-          run: |
-            "${GITHUB_WORKSPACE}/bin/bazelisk" build //...
+      - name: Build Artifacts
+        run: |
+          "${GITHUB_WORKSPACE}/bin/bazelisk" build //...
 
-        - name: Upload Artifacts
-          uses: skx/github-action-publish-binaries@master
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            args: '${GITHUB_WORKSPACE}/bazel-out/darwin-fastbuild/bin/packages/serialized-jira/serialized-jira_/serialized-jira'
+      - name: Upload Artifacts
+        uses: skx/github-action-publish-binaries@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: '${GITHUB_WORKSPACE}/bazel-out/darwin-fastbuild/bin/packages/serialized-jira/serialized-jira_/serialized-jira'
