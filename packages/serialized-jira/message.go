@@ -8,10 +8,10 @@ import (
 )
 
 type ticketInformation struct {
-	Summary   string
+	Summary     string
 	Description string
-	Type string
-	Errors  map[string]string
+	Type        string
+	Errors      map[string]string
 }
 
 func (tickInfo *ticketInformation) createTicket() error {
@@ -31,7 +31,7 @@ func (tickInfo *ticketInformation) createTicket() error {
 			},
 		}
 
-		_,_, err := establishClient().Issue.Create(&i)
+		_, _, err := establishClient().Issue.Create(&i)
 		checkError(err)
 
 		return nil
