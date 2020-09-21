@@ -44,12 +44,11 @@ jobs:
         run: |
           bazel build --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64 //packages/serialized-jira:serialized-jira-mac
 
-      # - name: Upload Artifacts
-      #   uses: svenstaro/upload-release-action@v2
-      #   with:
-      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
-      #     file: bazel-bin/packages/serialized-jira/serialized-jira_/serialized-jira
-      #     asset_name: serialized-jira
-      #     tag: ${{ github.ref }}
-      #     overwrite: true
-      #     body: "Test Github Release with Github Actions"
+      - name: Upload Artifacts
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: bazel-bin/packages/serialized-jira/serialized-jira_*
+          tag: ${{ github.ref }}
+          overwrite: true
+          file_glob: true
