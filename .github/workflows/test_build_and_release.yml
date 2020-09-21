@@ -16,6 +16,13 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
+      - name: Instrument Build
+        uses: kvrhdn/gha-buildevents@main
+        with:
+          apikey: ${{ secrets.BUILDEVENTS_APIKEY }}
+          dataset: builds
+          job-status: ${{ job.status }}
+
       - name: Mount Build Cache
         uses: actions/cache@v1
         with:
@@ -32,10 +39,3 @@ jobs:
       - name: Build Artifacts
         run: |
           bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //packages/serialized-jira:serialized-jira
-
-      - name: Upload Artifacts
-        uses: skx/github-action-publish-binaries@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          args: '/github/workspace/bazel-bin/packages/serialized-jira/serialized-jira_/serialized-jira'
