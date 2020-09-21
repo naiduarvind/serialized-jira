@@ -23,11 +23,22 @@ jobs:
           dataset: builds
           job-status: ${{ job.status }}
 
+      - run: |
+          echo ::set-env name=STEP_ID::0
+          echo ::set-env name=STEP_START::$(date +%s)
+
       - name: Mount Build Cache
         uses: actions/cache@v1
         with:
           path: "/home/runner/.cache/bazel"
           key: bazel
+
+      - run: |
+          buildevents step $TRACE_ID $STEP_ID $STEP_START 'Mount Build Cache'
+
+      - run: |
+          echo ::set-env name=STEP_ID::1
+          echo ::set-env name=STEP_START::$(date +%s)
 
       - name: Install Bazelisk
         uses: vsco/bazelisk-action@master
@@ -36,13 +47,34 @@ jobs:
           bazel-install-path: './.local/bin'
           os: 'linux'
 
+      - run: |
+          buildevents step $TRACE_ID $STEP_ID $STEP_START 'Install Bazelisk'
+
+      - run: |
+          echo ::set-env name=STEP_ID::2
+          echo ::set-env name=STEP_START::$(date +%s)
+
       - name: Build Linux Artifact
         run: |
-          bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //packages/serialized-jira:serialized-jira-linux
+          buildevents cmd $TRACE_ID $STEP_ID 'Build Linux Artifact' -- bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //packages/serialized-jira:serialized-jira-linux
+
+      - run: |
+          buildevents step $TRACE_ID $STEP_ID $STEP_START 'Build Linux Artifact'
+
+      - run: |
+          echo ::set-env name=STEP_ID::3
+          echo ::set-env name=STEP_START::$(date +%s)
 
       - name: Build Mac Artifact
         run: |
-          bazel build --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64 //packages/serialized-jira:serialized-jira-mac
+          buildevents cmd $TRACE_ID $STEP_ID 'Build Linux Artifact' -- bazel build --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64 //packages/serialized-jira:serialized-jira-mac
+
+      - run: |
+          buildevents step $TRACE_ID $STEP_ID $STEP_START 'Build Mac Artifact'
+
+      - run: |
+          echo ::set-env name=STEP_ID::4
+          echo ::set-env name=STEP_START::$(date +%s)
 
       - name: Upload Artifacts
         uses: svenstaro/upload-release-action@v2
@@ -52,3 +84,6 @@ jobs:
           tag: ${{ github.ref }}
           overwrite: true
           file_glob: true
+
+      - run: |
+          buildevents step $TRACE_ID $STEP_ID $STEP_START 'Upload Artifacts'
