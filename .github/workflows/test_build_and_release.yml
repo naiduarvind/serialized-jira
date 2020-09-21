@@ -36,9 +36,13 @@ jobs:
           bazel-install-path: './.local/bin'
           os: 'linux'
 
-      - name: Build Artifacts
+      - name: Build Linux Artifact
         run: |
-          bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //packages/serialized-jira:serialized-jira
+          bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //packages/serialized-jira:serialized-jira-linux
+
+      - name: Build Mac Artifact
+        run: |
+          bazel build --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64 //packages/serialized-jira:serialized-jira-mac
 
       - name: Upload Artifacts
         uses: svenstaro/upload-release-action@v2

@@ -17,9 +17,21 @@ go_library(
 )
 
 go_binary(
-    name = "serialized-jira",
+    name = "serialized-jira-mac",
+    goos = "darwin",
+    goarch = "amd64",
     embed = [":go_default_library"],
     visibility = ["//visibility:public"],
+    out = "serialized-jira_darwin_amd64",
+)
+
+go_binary(
+    name = "serialized-jira-linux",
+    goos = "linux",
+    goarch = "amd64",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+    out = "serialized-jira_linux_amd64"
 )
 
 # container_image(
