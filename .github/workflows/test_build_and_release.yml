@@ -56,10 +56,10 @@ jobs:
 
       - name: Build Linux Artifact
         run: |
-          buildevents cmd $TRACE_ID $STEP_ID 'Build Linux Artifact' -- bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //packages/serialized-jira:serialized-jira-linux
+          buildevents cmd $TRACE_ID $STEP_ID 'bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64' -- bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //packages/serialized-jira:serialized-jira-linux
 
       - run: |
-          buildevents step $TRACE_ID $STEP_ID $STEP_START 'bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64'
+          buildevents step $TRACE_ID $STEP_ID $STEP_START 'Build Linux Artifact'
 
       - run: |
           echo ::set-env name=STEP_ID::3
@@ -67,10 +67,10 @@ jobs:
 
       - name: Build Mac Artifact
         run: |
-          buildevents cmd $TRACE_ID $STEP_ID 'Build Mac Artifact' -- bazel build --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64 //packages/serialized-jira:serialized-jira-mac
+          buildevents cmd $TRACE_ID $STEP_ID 'bazel build --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64' -- bazel build --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64 //packages/serialized-jira:serialized-jira-mac
 
       - run: |
-          buildevents step $TRACE_ID $STEP_ID $STEP_START 'bazel build --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64'
+          buildevents step $TRACE_ID $STEP_ID $STEP_START 'Build Mac Artifact'
 
       - run: |
           echo ::set-env name=STEP_ID::4
