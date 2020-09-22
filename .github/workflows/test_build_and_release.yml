@@ -76,6 +76,10 @@ jobs:
           echo ::set-env name=STEP_ID::4
           echo ::set-env name=STEP_START::$(date +%s)
 
+- name: Move Artifacts to Working Directory
+        run: |
+          buildevents cmd $TRACE_ID $STEP_ID 'mv bazel-bin/packages/serialized-jira/serialized-jira_* ./.github/workflows/' -- mv bazel-bin/packages/serialized-jira/serialized-jira_* ./.github/workflows/
+
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
