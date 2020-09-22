@@ -80,7 +80,7 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: 'bazel-bin/packages/serialized-jira/serialized-jira_*_*'
+          file: 'bazel-bin/packages/serialized-jira/serialized-jira_*_*[!.runfiles.manifest]'
           tag: ${{ github.ref }}
           overwrite: true
           file_glob: true
