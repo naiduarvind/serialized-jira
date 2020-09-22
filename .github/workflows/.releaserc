@@ -1,0 +1,14 @@
+---
+branches:
+- master
+plugins:
+- - "@semantic-release/commit-analyzer"
+  - preset: conventionalcommits
+- - "@semantic-release/release-notes-generator"
+  - preset: conventionalcommits
+- - "@semantic-release/github"
+  - assets:
+    - path: bazel-bin/packages/serialized-jira/serialized-jira_darwin_amd64
+      label: Binary - Darwin AMD64
+    - path: bazel-bin/packages/serialized-jira/serialized-jira_darwin_amd64
+      label: Binary - Linux AMD64
