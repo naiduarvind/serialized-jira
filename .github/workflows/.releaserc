@@ -9,6 +9,6 @@ plugins:
 - - "@semantic-release/github"
   - assets:
     - path: serialized-jira_darwin_amd64
-      label: Binary - Darwin AMD64
+      label: Serialized Jira - Darwin AMD64
     - path: serialized-jira_linux_amd64
-      label: Binary - Linux AMD64
+      label: Serialized Jira - Linux AMD64
