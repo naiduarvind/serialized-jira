@@ -106,12 +106,27 @@ jobs:
 
       - run: |
           buildevents step $TRACE_ID $STEP_ID $STEP_START 'Setup Node.js'
-        
+
       - run: |
           echo ::set-env name=STEP_ID::6
           echo ::set-env name=STEP_START::$(date +%s)
 
+	    - name: Mount Node Modules Cache
+        uses: actions/cache@v1
+        id: node-cache
+        with:
+          path: node_modules
+          key: package - ${{ hashFiles('package.json') }}
+
+      - run: |
+          buildevents step $TRACE_ID $STEP_ID $STEP_START 'Mount Node Modules Cache'
+        
+      - run: |
+          echo ::set-env name=STEP_ID::7
+          echo ::set-env name=STEP_START::$(date +%s)
+
       - name: Setup Conventional Commits Plugin
+        if: steps.cache-node.outputs.cache-hit != 'true'
         run: buildevents cmd $TRACE_ID $STEP_ID 'npm install conventional-changelog-conventionalcommits' -- npm install conventional-changelog-conventionalcommits
         working-directory: ./.github/workflows
 
@@ -119,7 +134,7 @@ jobs:
           buildevents step $TRACE_ID $STEP_ID $STEP_START 'Install Conventional Commits Plugin'
 
       - run: |
-          echo ::set-env name=STEP_ID::7
+          echo ::set-env name=STEP_ID::8
           echo ::set-env name=STEP_START::$(date +%s)
 
       - name: Release Artifacts to Github
