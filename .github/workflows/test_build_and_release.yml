@@ -80,14 +80,35 @@ jobs:
         run: |
           buildevents cmd $TRACE_ID $STEP_ID 'mv bazel-bin/packages/serialized-jira/serialized-jira_* ./.github/workflows/' -- mv bazel-bin/packages/serialized-jira/serialized-jira_* ./.github/workflows/
 
+      - run: |
+          buildevents step $TRACE_ID $STEP_ID $STEP_START 'Move Artifacts to Working Directory'
+
+      - run: |
+          echo ::set-env name=STEP_ID::5
+          echo ::set-env name=STEP_START::$(date +%s)
+
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
           node-version: 13
 
+      - run: |
+          buildevents step $TRACE_ID $STEP_ID $STEP_START 'Setup Node.js'
+        
+      - run: |
+          echo ::set-env name=STEP_ID::6
+          echo ::set-env name=STEP_START::$(date +%s)
+
       - name: Setup Conventional Commits Plugin
-        run: npm install conventional-changelog-conventionalcommits
+        run: buildevents cmd $TRACE_ID $STEP_ID 'npm install conventional-changelog-conventionalcommits' -- npm install conventional-changelog-conventionalcommits
         working-directory: ./.github/workflows
+
+      - run: |
+          buildevents step $TRACE_ID $STEP_ID $STEP_START 'Setup Conventional Commits Plugin'
+
+      - run: |
+          echo ::set-env name=STEP_ID::7
+          echo ::set-env name=STEP_START::$(date +%s)
 
       - name: Release Artifacts to Github
         working-directory: ./.github/workflows
@@ -100,4 +121,4 @@ jobs:
         run: npx semantic-release
 
       - run: |
-          buildevents step $TRACE_ID $STEP_ID $STEP_START 'Release Artifacts to Github'
+          buildevents step $TRACE_ID $STEP_ID $STEP_START 'Setup Conventional Commits Plugin'
