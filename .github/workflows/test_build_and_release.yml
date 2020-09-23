@@ -27,20 +27,24 @@ jobs:
           echo ::set-env name=STEP_ID::0
           echo ::set-env name=STEP_START::$(date +%s)
 
-      - name: Mount Build Cache
+      - name: Mount Bazelisk Cache
+        id: bazelisk-cache
         uses: actions/cache@v2
         with:
-          path: "/home/runner/.cache/bazel"
-          key: bazel
+          path: |
+            - /home/runner/.cache/bazelisk
+            - /usr/local/bin/bazel
+          key: bazelisk-cache-${{ hashFiles('.bazeliskversion') }}
 
       - run: |
-          buildevents step $TRACE_ID $STEP_ID $STEP_START 'Mount Build Cache'
+          buildevents step $TRACE_ID $STEP_ID $STEP_START 'Mount Bazelisk Cache'
 
       - run: |
           echo ::set-env name=STEP_ID::1
           echo ::set-env name=STEP_START::$(date +%s)
 
       - name: Install Bazelisk
+        if: steps.bazelisk-cache.outputs.cache-hit != 'true'
         uses: vsco/bazelisk-action@master
         with:
           version: '1.6.1'
@@ -54,23 +58,31 @@ jobs:
           echo ::set-env name=STEP_ID::2
           echo ::set-env name=STEP_START::$(date +%s)
 
-      - name: Build Linux Artifact
-        run: |
-          buildevents cmd $TRACE_ID $STEP_ID 'bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64' -- bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //packages/serialized-jira:serialized-jira-linux
+      - name: Mount Bazel Cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          - /home/runner/.cache/bazel/_bazel_runner/cache/repos/v1
+          - /home/runner/.cache/bazel-disk-cache
+        key: bazel-cache- ${{ hashFiles('.bazelversion', 'WORKSPACE') }}
 
       - run: |
-          buildevents step $TRACE_ID $STEP_ID $STEP_START 'Build Linux Artifact'
+          buildevents step $TRACE_ID $STEP_ID $STEP_START 'Mount Bazel Cache'
 
       - run: |
           echo ::set-env name=STEP_ID::3
           echo ::set-env name=STEP_START::$(date +%s)
+
+      - name: Build Linux Artifact
+        run: |
+          buildevents cmd $TRACE_ID $STEP_ID 'bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64' -- bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //packages/serialized-jira:serialized-jira-linux
 
       - name: Build Mac Artifact
         run: |
           buildevents cmd $TRACE_ID $STEP_ID 'bazel build --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64' -- bazel build --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64 //packages/serialized-jira:serialized-jira-mac
 
       - run: |
-          buildevents step $TRACE_ID $STEP_ID $STEP_START 'Build Mac Artifact'
+          buildevents step $TRACE_ID $STEP_ID $STEP_START 'Build Artifacts'
 
       - run: |
           echo ::set-env name=STEP_ID::4
@@ -104,7 +116,7 @@ jobs:
         working-directory: ./.github/workflows
 
       - run: |
-          buildevents step $TRACE_ID $STEP_ID $STEP_START 'Setup Conventional Commits Plugin'
+          buildevents step $TRACE_ID $STEP_ID $STEP_START 'Install Conventional Commits Plugin'
 
       - run: |
           echo ::set-env name=STEP_ID::7
@@ -121,4 +133,4 @@ jobs:
         run: npx semantic-release
 
       - run: |
-          buildevents step $TRACE_ID $STEP_ID $STEP_START 'Setup Conventional Commits Plugin'
+          buildevents step $TRACE_ID $STEP_ID $STEP_START 'Release Artifacts to Github'
