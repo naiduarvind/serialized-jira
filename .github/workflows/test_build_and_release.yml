@@ -59,12 +59,12 @@ jobs:
           echo ::set-env name=STEP_START::$(date +%s)
 
       - name: Mount Bazel Cache
-      uses: actions/cache@v2
-      with:
-        path: |
-          - /home/runner/.cache/bazel/_bazel_runner/cache/repos/v1
-          - /home/runner/.cache/bazel-disk-cache
-        key: bazel-cache- ${{ hashFiles('.bazelversion', 'WORKSPACE') }}
+        uses: actions/cache@v2
+        with:
+          path: |
+            - /home/runner/.cache/bazel/_bazel_runner/cache/repos/v1
+            - /home/runner/.cache/bazel-disk-cache
+          key: bazel-cache- ${{ hashFiles('.bazelversion', 'WORKSPACE') }}
 
       - run: |
           buildevents step $TRACE_ID $STEP_ID $STEP_START 'Mount Bazel Cache'
