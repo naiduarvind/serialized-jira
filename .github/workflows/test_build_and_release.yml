@@ -115,8 +115,8 @@ jobs:
         uses: actions/cache@v1
         id: node-cache
         with:
-          path: '**/node_modules'
-          key: package-${{ hashFiles('**/package-lock.json') }}
+          path: node_modules
+          key: package-${{ hashFiles('package-lock.json') }}
 
       - run: |
           buildevents step $TRACE_ID $STEP_ID $STEP_START 'Mount Node Modules Cache'
