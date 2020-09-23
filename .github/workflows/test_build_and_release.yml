@@ -10,7 +10,7 @@ on:
       - master
 
 jobs:
-  build:
+  build_release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -33,6 +33,7 @@ jobs:
         with:
           path: |
             - /home/runner/.cache/bazelisk
+            - /home/runner/.cache/bazel
             - /usr/local/bin/bazel
           key: bazelisk-cache-${{ hashFiles('.bazeliskversion') }}
 
@@ -58,34 +59,19 @@ jobs:
           echo ::set-env name=STEP_ID::2
           echo ::set-env name=STEP_START::$(date +%s)
 
-      - name: Mount Bazel Cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            - /home/runner/.cache/bazel/_bazel_runner/cache/repos/v1
-            - /home/runner/.cache/bazel-disk-cache
-          key: bazel-cache-${{ hashFiles('.bazelversion', 'WORKSPACE') }}
-
-      - run: |
-          buildevents step $TRACE_ID $STEP_ID $STEP_START 'Mount Bazel Cache'
-
-      - run: |
-          echo ::set-env name=STEP_ID::3
-          echo ::set-env name=STEP_START::$(date +%s)
-
       - name: Build Linux Artifact
         run: |
-          buildevents cmd $TRACE_ID $STEP_ID 'bazel build --disk_cache=/home/runner/.cache/bazel-disk-cache --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64' -- bazel build --disk_cache=/home/runner/.cache/bazel-disk-cache --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //packages/serialized-jira:serialized-jira-linux
+          buildevents cmd $TRACE_ID $STEP_ID 'bazel build --disk_cache=/home/runner/.cache/bazel/linux --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64' -- bazel build --disk_cache=/home/runner/.cache/bazel-disk-cache --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //packages/serialized-jira:serialized-jira-linux
 
       - name: Build Mac Artifact
         run: |
-          buildevents cmd $TRACE_ID $STEP_ID 'bazel build --disk_cache=/home/runner/.cache/bazel-disk-cache --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64' -- bazel build --disk_cache=/home/runner/.cache/bazel-disk-cache --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64 //packages/serialized-jira:serialized-jira-mac
+          buildevents cmd $TRACE_ID $STEP_ID 'bazel build --disk_cache=/home/runner/.cache/bazel/osx --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64' -- bazel build --disk_cache=/home/runner/.cache/bazel-disk-cache --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64 //packages/serialized-jira:serialized-jira-mac
 
       - run: |
           buildevents step $TRACE_ID $STEP_ID $STEP_START 'Build Artifacts'
 
       - run: |
-          echo ::set-env name=STEP_ID::4
+          echo ::set-env name=STEP_ID::3
           echo ::set-env name=STEP_START::$(date +%s)
 
       - name: Move Artifacts to Working Directory
@@ -96,7 +82,7 @@ jobs:
           buildevents step $TRACE_ID $STEP_ID $STEP_START 'Move Artifacts to Working Directory'
 
       - run: |
-          echo ::set-env name=STEP_ID::5
+          echo ::set-env name=STEP_ID::4
           echo ::set-env name=STEP_START::$(date +%s)
 
       - name: Setup Node.js
@@ -108,7 +94,7 @@ jobs:
           buildevents step $TRACE_ID $STEP_ID $STEP_START 'Setup Node.js'
 
       - run: |
-          echo ::set-env name=STEP_ID::6
+          echo ::set-env name=STEP_ID::5
           echo ::set-env name=STEP_START::$(date +%s)
           
       - name: Mount Node Modules Cache
@@ -122,7 +108,7 @@ jobs:
           buildevents step $TRACE_ID $STEP_ID $STEP_START 'Mount Node Modules Cache'
         
       - run: |
-          echo ::set-env name=STEP_ID::7
+          echo ::set-env name=STEP_ID::6
           echo ::set-env name=STEP_START::$(date +%s)
 
       - name: Setup Conventional Commits Plugin
@@ -134,7 +120,7 @@ jobs:
           buildevents step $TRACE_ID $STEP_ID $STEP_START 'Install Conventional Commits Plugin'
 
       - run: |
-          echo ::set-env name=STEP_ID::8
+          echo ::set-env name=STEP_ID::7
           echo ::set-env name=STEP_START::$(date +%s)
 
       - name: Release Artifacts to Github
