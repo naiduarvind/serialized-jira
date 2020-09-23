@@ -75,11 +75,11 @@ jobs:
 
       - name: Build Linux Artifact
         run: |
-          buildevents cmd $TRACE_ID $STEP_ID 'bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64' -- bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //packages/serialized-jira:serialized-jira-linux
+          buildevents cmd $TRACE_ID $STEP_ID 'bazel build --disk_cache=/home/runner/.cache/bazel-disk-cache --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64' -- bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //packages/serialized-jira:serialized-jira-linux
 
       - name: Build Mac Artifact
         run: |
-          buildevents cmd $TRACE_ID $STEP_ID 'bazel build --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64' -- bazel build --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64 //packages/serialized-jira:serialized-jira-mac
+          buildevents cmd $TRACE_ID $STEP_ID 'bazel build --disk_cache=/home/runner/.cache/bazel-disk-cache --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64' -- bazel build --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64 //packages/serialized-jira:serialized-jira-mac
 
       - run: |
           buildevents step $TRACE_ID $STEP_ID $STEP_START 'Build Artifacts'
