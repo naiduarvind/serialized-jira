@@ -12,10 +12,10 @@ import (
 )
 
 type TicketData struct {
-	TicketSummary string
+	TicketSummary     string
 	TicketDescription string
-	TicketLabel string
-	TicketProgress int
+	TicketLabel       string
+	TicketProgress    int
 }
 
 func main() {
@@ -57,9 +57,9 @@ func confirmation(w http.ResponseWriter, r *http.Request) {
 
 func send(w http.ResponseWriter, r *http.Request) {
 	tickInfo := &ticketInformation{
-		Summary:   r.PostFormValue("summary"),
+		Summary:     r.PostFormValue("summary"),
 		Description: r.PostFormValue("description"),
-		Type: r.PostFormValue("type"),
+		Type:        r.PostFormValue("type"),
 	}
 
 	if err := tickInfo.createTicket(); err != nil {

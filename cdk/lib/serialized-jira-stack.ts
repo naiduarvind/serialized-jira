@@ -1,20 +1,39 @@
+import path = require("path")
 import * as cdk from '@aws-cdk/core';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as apigw from '@aws-cdk/aws-apigateway';
+import * as assets from '@aws-cdk/aws-s3-assets';
 
 export class SerializedJiraStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // INFO: defines AWS Lambda resource for Serialized Jira
-    const serializedJira = new lambda.Function(this, 'SerializedJira', {
-      runtime: lambda.Runtime.GO_1_X, // INFO: execution environment
-      code: lambda.Code.fromAsset('../packages/serialized-jira'), // INFO: code assets from lambda directory
-      handler: 'index.handler' // INFO: file is "serialized-jira", function is "handler"
-    });
+    const myLambdaAsset = new assets.Asset(
+      // @ts-ignore - this expects Construct not cdk.Construct :thinking:
+      this,
+      "HelloGoServerLambdaFnZip",
+      {
+        path: path.join(__dirname, "lambda"),
+      }
+    )
 
-    new apigw.LambdaRestApi(this, 'Endpoint', {
-      handler: serializedJira
-    });
+    const lambdaFn = new lambda.Function(this, "HelloGoServerLambdaFn", {
+      code: lambda.Code.fromBucket(
+        myLambdaAsset.bucket,
+        myLambdaAsset.s3ObjectKey
+      ),
+      runtime: lambda.Runtime.GO_1_X,
+      handler: "main",
+    })
+
+    // API Gateway
+    new apigw.LambdaRestApi(
+      // @ts-ignore - this expects Construct not cdk.Construct :thinking:
+      this,
+      "HelloGoServerLambdaFnEndpoint",
+      {
+        handler: lambdaFn,
+      }
+    )
   }
 }
