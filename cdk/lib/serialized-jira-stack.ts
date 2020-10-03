@@ -7,7 +7,7 @@ export class SerializedJiraStack extends cdk.Stack {
     super(scope, id, props);
 
     const lambdaFn = new lambda.Function(this, "SerializedJiraLambdaFn", {
-      code: lambda.Code.fromAsset('lambda'),
+      code: lambda.Code.fromAsset('./../packages/serialized-jira'),
       runtime: lambda.Runtime.GO_1_X,
       handler: "main",
     })

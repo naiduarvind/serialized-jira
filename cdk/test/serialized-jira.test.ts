@@ -1,7 +1,5 @@
-import { expect as expectCDK, matchTemplate, MatchStyle, haveResource } from '@aws-cdk/assert';
+import { expect as expectCDK, haveResource } from '@aws-cdk/assert';
 import * as cdk from '@aws-cdk/core';
-import * as lambda from '@aws-cdk/aws-lambda';
-import * as apigw from '@aws-cdk/aws-apigateway';
 import * as SerializedJira from '../lib/serialized-jira-stack';
 
 test('Lambda Created', () => {
@@ -17,5 +15,5 @@ test('API Gateway Created', () => {
   // INFO: WHEN
   const stack = new SerializedJira.SerializedJiraStack(app, 'SerializedJiraTestStack');
   // INFO: THEN
-  expectCDK(stack).to(haveResource("AWS::SNS::Topic"));
+  expectCDK(stack).to(haveResource("AWS::ApiGateway::RestApi"));
 });
