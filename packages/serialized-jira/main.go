@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/andygrunwald/go-jira"
+	"github.com/apex/gateway"
 	"github.com/gorilla/mux"
 )
 
@@ -22,12 +23,11 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", home).Methods("GET")
 	r.HandleFunc("/", send).Methods("POST")
-	r.HandleFunc("/confirmation", confirmation).Methods("GET")
-	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static/"))))
+	r.HandleFunc("confirmation", confirmation).Methods("GET")
 
-	log.Println("Listening...")
-	err := http.ListenAndServe(":3000", r)
-	checkError(err)
+	http.Handle("/", r)
+	http.Handle("/confirmation", r)
+	log.Fatal(gateway.ListenAndServe(":3000", nil))
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
@@ -48,10 +48,14 @@ func home(w http.ResponseWriter, r *http.Request) {
 		checkError(err)
 	}
 
+	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	render(w, "templates/index.html", td)
 }
 
 func confirmation(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	render(w, "templates/confirmation.html", nil)
 }
 
@@ -72,6 +76,7 @@ func send(w http.ResponseWriter, r *http.Request) {
 }
 
 func render(w http.ResponseWriter, filename string, data interface{}) {
+	w.Header().Set("Content-Type", "text/html")
 	tmpl, err := template.ParseFiles(filename)
 	if err != nil {
 		log.Println(err)
@@ -98,6 +103,7 @@ func establishClient() *jira.Client {
 	return jiraClient
 }
 
+//
 func checkError(err error) {
 	if err != nil {
 		log.Panic(err)
