@@ -23,10 +23,9 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", home).Methods("GET")
 	r.HandleFunc("/", send).Methods("POST")
-	r.HandleFunc("confirmation", confirmation).Methods("GET")
+	r.HandleFunc("/confirmation", confirmation).Methods("GET")
 
 	http.Handle("/", r)
-	http.Handle("/confirmation", r)
 	log.Fatal(gateway.ListenAndServe(":3000", nil))
 }
 
@@ -72,7 +71,9 @@ func send(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, "/confirmation", http.StatusSeeOther)
+	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	http.Redirect(w, r, "/prod/confirmation", http.StatusMovedPermanently)
 }
 
 func render(w http.ResponseWriter, filename string, data interface{}) {
