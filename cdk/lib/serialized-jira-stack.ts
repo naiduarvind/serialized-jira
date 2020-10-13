@@ -19,10 +19,8 @@ export class SerializedJiraCertificateStack extends cdk.Stack {
       validation: acm.CertificateValidation.fromDns(),
     });
 
-    const certArn = acmCert.certificateArn;
-
     new CfnOutput(this, "SerializedJiraCertificateArn", {
-      value: certArn,
+      value: acmCert.certificateArn,
     });
   }
 }
