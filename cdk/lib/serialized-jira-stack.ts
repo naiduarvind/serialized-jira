@@ -44,14 +44,17 @@ export class SerializedJiraStack extends cdk.Stack {
       handler: "main",
     })
 
-    const customDomain = new apigw.DomainName(this, 'SerializedJiraCustomDomain', {
+    const customDomain = new apigw.DomainName(this, 'CustomDomain', {
       domainName: domainName,
-      certificate: Certificate.fromCertificateArn(this, 'SerializedJiraCertificate', props.certificateArn),
+      certificate: Certificate.fromCertificateArn(this, 'Certificate', props.certificateArn),
       endpointType: EndpointType.EDGE,
+      securityPolicy: apigw.SecurityPolicy.TLS_1_2,
     });
 
-    new apigw.LambdaRestApi(this, 'SerializedJiraAPIEndpoint', {
+    const apiGw = new apigw.LambdaRestApi(this, 'SerializedJiraAPIEndpoint', {
       handler: lambdaFn,
     });
+
+    customDomain.addBasePathMapping(apiGw);
   }
 }
