@@ -36,8 +36,7 @@ export class SerializedJiraStack extends cdk.Stack {
     // TODO: Upload static files into the serialized-jira.thebility.engineer S3 bucket
 
     const lambdaFn = new lambda.Function(this, "SerializedJiraLambdaFn", {
-      // TODO: Exclude certain artifacts, files, and directories
-      code: lambda.Code.fromAsset('./../packages/serialized-jira'),
+      code: lambda.Code.fromAsset('./../packages/serialized-jira', { exclude: ['*.go', '*.bazel', 'static/**']}),
       runtime: lambda.Runtime.GO_1_X,
       handler: "main",
     })
