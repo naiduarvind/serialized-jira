@@ -1,5 +1,5 @@
 import * as cdk from '@aws-cdk/core';
-import { CfnOutput } from "@aws-cdk/core";
+import { CfnOutput, RemovalPolicy } from "@aws-cdk/core";
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as apigw from '@aws-cdk/aws-apigateway';
 import { Bucket, HttpMethods } from '@aws-cdk/aws-s3';
@@ -36,7 +36,7 @@ export class SerializedJiraStack extends cdk.Stack {
     super(scope, id);
 
     const s3Bucket = new Bucket(this, "SerializedJiraAssetBucket", {
-      bucketName: "serialied-jira-assets.thebility.engineer",
+      bucketName: "serialized-jira-assets.thebility.engineer",
       cors: [
         {
           allowedOrigins: ['*'],
