@@ -73,7 +73,7 @@ func send(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	http.Redirect(w, r, "/prod/confirmation", http.StatusMovedPermanently)
+	http.Redirect(w, r, "/confirmation", http.StatusMovedPermanently)
 }
 
 func render(w http.ResponseWriter, filename string, data interface{}) {
