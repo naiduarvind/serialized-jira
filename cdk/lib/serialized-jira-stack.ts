@@ -2,6 +2,8 @@ import * as cdk from '@aws-cdk/core';
 import { CfnOutput } from "@aws-cdk/core";
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as apigw from '@aws-cdk/aws-apigateway';
+import { Bucket, HttpMethods } from '@aws-cdk/aws-s3';
+import * as s3deploy from '@aws-cdk/aws-s3-deployment';
 import * as acm from "@aws-cdk/aws-certificatemanager";
 import { EndpointType } from '@aws-cdk/aws-apigateway';
 import { Certificate } from '@aws-cdk/aws-certificatemanager';
@@ -33,22 +35,41 @@ export class SerializedJiraStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props: SerializedJiraProps) {
     super(scope, id);
 
-    // TODO: Upload static files into the serialized-jira.thebility.engineer S3 bucket
+    const s3Bucket = new Bucket(this, "SerializedJiraAssetBucket", {
+      bucketName: "serialied-jira-assets.thebility.engineer",
+      cors: [
+        {
+          allowedOrigins: ['*'],
+          allowedMethods: [ HttpMethods.GET ],
+          maxAge: 3000,
+          allowedHeaders: ['*']
+        }
+      ],
+      publicReadAccess: true,
+      versioned: true,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+    });
+
+    new s3deploy.BucketDeployment(this, 'DeployWebsite', {
+      sources: [s3deploy.Source.asset('./../packages/serialized-jira/static')],
+      destinationBucket: s3Bucket,
+      destinationKeyPrefix: 'static'
+    });
 
     const lambdaFn = new lambda.Function(this, "SerializedJiraLambdaFn", {
-      code: lambda.Code.fromAsset('./../packages/serialized-jira', { exclude: ['*.go', '*.bazel', 'static/**']}),
+      code: lambda.Code.fromAsset('./../packages/serialized-jira', { exclude: ['*.go', '*.bazel', 'static/**'] }),
       runtime: lambda.Runtime.GO_1_X,
       handler: "main",
-    })
+    });
 
-    const customDomain = new apigw.DomainName(this, 'CustomDomain', {
+    const customDomain = new apigw.DomainName(this, "SerializedJiraCustomDomain", {
       domainName: domainName,
       certificate: Certificate.fromCertificateArn(this, 'Certificate', props.certificateArn),
       endpointType: EndpointType.EDGE,
       securityPolicy: apigw.SecurityPolicy.TLS_1_2,
     });
 
-    const apiGw = new apigw.LambdaRestApi(this, 'SerializedJiraAPIEndpoint', {
+    const apiGw = new apigw.LambdaRestApi(this, "SerializedJiraAPIEndpoint", {
       handler: lambdaFn,
     });
 
