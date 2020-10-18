@@ -23,7 +23,6 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", home).Methods("GET")
 	r.HandleFunc("/", send).Methods("POST")
-	r.HandleFunc("/confirmation", confirmation).Methods("GET")
 
 	http.Handle("/", r)
 	log.Fatal(gateway.ListenAndServe(":3000", nil))
@@ -52,12 +51,6 @@ func home(w http.ResponseWriter, r *http.Request) {
 	render(w, "templates/index.html", td)
 }
 
-func confirmation(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	render(w, "templates/confirmation.html", nil)
-}
-
 func send(w http.ResponseWriter, r *http.Request) {
 	tickInfo := &ticketInformation{
 		Summary:     r.PostFormValue("summary"),
@@ -73,7 +66,7 @@ func send(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	http.Redirect(w, r, "/confirmation", http.StatusMovedPermanently)
+	http.Redirect(w, r, "/", http.StatusMovedPermanently)
 }
 
 func render(w http.ResponseWriter, filename string, data interface{}) {
