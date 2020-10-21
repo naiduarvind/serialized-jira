@@ -1,5 +1,7 @@
 import * as cdk from '@aws-cdk/core';
-import { CfnOutput, RemovalPolicy } from "@aws-cdk/core";
+import { Key } from '@aws-cdk/aws-kms';
+import * as kms from '@aws-cdk/aws-kms';
+import { CfnOutput } from "@aws-cdk/core";
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as apigw from '@aws-cdk/aws-apigateway';
 import { Bucket, HttpMethods } from '@aws-cdk/aws-s3';
@@ -61,6 +63,10 @@ export class SerializedJiraStack extends cdk.Stack {
       runtime: lambda.Runtime.GO_1_X,
       handler: "main",
     });
+
+    const kmsKey = new kms.Key(this, "SeriazedJiraKMSKey");
+    kmsKey.addAlias("serialized-jira-service-key");
+    kmsKey.grantEncryptDecrypt(lambdaFn);
 
     const customDomain = new apigw.DomainName(this, "SerializedJiraCustomDomain", {
       domainName: domainName,
