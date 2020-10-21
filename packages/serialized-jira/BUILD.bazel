@@ -13,6 +13,7 @@ go_library(
         "@com_github_andygrunwald_go_jira//:go_default_library",
         "@com_github_apex_gateway//:go_default_library",
         "@com_github_gorilla_mux//:go_default_library",
+        "@com_github_secrethub_secrethub_go//pkg/secrethub:go_default_library",
     ],
 )
 

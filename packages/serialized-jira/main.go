@@ -5,11 +5,18 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/andygrunwald/go-jira"
 	"github.com/apex/gateway"
 	"github.com/gorilla/mux"
+	"github.com/secrethub/secrethub-go/pkg/secrethub"
+)
+
+var (
+	jiraUsername = os.Getenv("JIRA_USERNAME")
+	jiraPassword = os.Getenv("JIRA_PASSWORD")
 )
 
 type TicketData struct {
@@ -17,6 +24,22 @@ type TicketData struct {
 	TicketDescription string
 	TicketLabel       string
 	TicketProgress    int
+}
+
+func init() {
+	var err error
+	client := secrethub.Must(secrethub.NewClient())
+
+	jiraUsername, err = client.Secrets().ReadString("naiduarvind/serialized-jira/jira-username")
+	if err != nil {
+		panic(err)
+	}
+
+	jiraPassword, err = client.Secrets().ReadString("naiduarvind/serialized-jira/jira-password")
+	if err != nil {
+		panic(err)
+	}
+
 }
 
 func main() {
@@ -83,6 +106,7 @@ func render(w http.ResponseWriter, filename string, data interface{}) {
 	}
 }
 
+// TODO: Possibility of moving this block into func init()
 func establishClient() *jira.Client {
 	base := "https://thebilityengineer.atlassian.net"
 
@@ -97,7 +121,7 @@ func establishClient() *jira.Client {
 	return jiraClient
 }
 
-//
+// TODO: Remove this block
 func checkError(err error) {
 	if err != nil {
 		log.Panic(err)
