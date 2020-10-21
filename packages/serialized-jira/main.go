@@ -15,8 +15,8 @@ import (
 )
 
 var (
-	jiraUsername = os.Getenv("JIRA_USERNAME")
-	jiraPassword = os.Getenv("JIRA_PASSWORD")
+	username = os.Getenv("USERNAME")
+	password = os.Getenv("PASSWORD")
 )
 
 type TicketData struct {
@@ -27,15 +27,15 @@ type TicketData struct {
 }
 
 func init() {
-	var err error
 	client := secrethub.Must(secrethub.NewClient())
+	var err error
 
-	jiraUsername, err = client.Secrets().ReadString("naiduarvind/serialized-jira/jira-username")
+	username, err = client.Secrets().ReadString("naiduarvind/demo/username")
 	if err != nil {
 		panic(err)
 	}
 
-	jiraPassword, err = client.Secrets().ReadString("naiduarvind/serialized-jira/jira-password")
+	password, err = client.Secrets().ReadString("naiduarvind/demo/username")
 	if err != nil {
 		panic(err)
 	}
@@ -112,8 +112,8 @@ func establishClient() *jira.Client {
 
 	// TODO: temporary creds -- to be replaced with env variables
 	tp := jira.BasicAuthTransport{
-		Username: "techmaxed.net@gmail.com",
-		Password: "a0jf3hW8TtJmSxc7JBQi7281",
+		Username: username,
+		Password: password,
 	}
 	jiraClient, err := jira.NewClient(tp.Client(), base)
 	checkError(err)

@@ -1,13 +1,12 @@
 import * as cdk from '@aws-cdk/core';
-import { Key } from '@aws-cdk/aws-kms';
 import * as kms from '@aws-cdk/aws-kms';
-import { CfnOutput } from "@aws-cdk/core";
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as apigw from '@aws-cdk/aws-apigateway';
 import { Bucket, HttpMethods } from '@aws-cdk/aws-s3';
-import * as s3deploy from '@aws-cdk/aws-s3-deployment';
 import * as acm from "@aws-cdk/aws-certificatemanager";
+import * as s3deploy from '@aws-cdk/aws-s3-deployment';
 import { EndpointType } from '@aws-cdk/aws-apigateway';
+import { CfnOutput, RemovalPolicy } from "@aws-cdk/core";
 import { Certificate } from '@aws-cdk/aws-certificatemanager';
 
 const domainName = "jira.thebility.engineer";
@@ -52,7 +51,7 @@ export class SerializedJiraStack extends cdk.Stack {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
-    new s3deploy.BucketDeployment(this, 'DeployWebsite', {
+    new s3deploy.BucketDeployment(this, 'SerializedJiraDeployAsset', {
       sources: [s3deploy.Source.asset('./../packages/serialized-jira/static')],
       destinationBucket: s3Bucket,
       destinationKeyPrefix: 'static'
@@ -62,9 +61,16 @@ export class SerializedJiraStack extends cdk.Stack {
       code: lambda.Code.fromAsset('./../packages/serialized-jira', { exclude: ['*.go', '*.bazel', 'static/**'] }),
       runtime: lambda.Runtime.GO_1_X,
       handler: "main",
+      environment: {
+        SECRETHUB_IDENTITY_PROVIDER: "aws",
+      }
     });
 
-    const kmsKey = new kms.Key(this, "SeriazedJiraKMSKey");
+    const kmsKey = new kms.Key(this, "SerializedJiraKMSKey", {
+      description: "KMS Key used by Secret Hub by Serialized Jira Lambda",
+      removalPolicy: RemovalPolicy.DESTROY,
+      trustAccountIdentities: true,
+    });
     kmsKey.addAlias("serialized-jira-service-key");
     kmsKey.grantEncryptDecrypt(lambdaFn);
 
