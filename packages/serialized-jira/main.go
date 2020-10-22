@@ -29,17 +29,14 @@ type TicketData struct {
 func init() {
 	client := secrethub.Must(secrethub.NewClient())
 	var err error
-
-	username, err = client.Secrets().ReadString("naiduarvind/demo/username")
+	username, err = client.Secrets().ReadString("naiduarvind/serializedjira/username")
 	if err != nil {
 		panic(err)
 	}
-
-	password, err = client.Secrets().ReadString("naiduarvind/demo/username")
+	password, err = client.Secrets().ReadString("naiduarvind/serializedjira/password")
 	if err != nil {
 		panic(err)
 	}
-
 }
 
 func main() {
