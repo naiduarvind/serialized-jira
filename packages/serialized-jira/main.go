@@ -55,7 +55,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 
 	var td []TicketData
 
-	jql := "project = TBE and type = Task and Status IN ('In Progress') AND createdDate <= startOfWeek()"
+	jql := "project = TBE and type = Task and Status IN ('In Progress')"
 
 	issues, _, err := establishClient().Issue.Search(jql, nil)
 	checkError(err)
