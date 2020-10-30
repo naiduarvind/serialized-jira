@@ -10,15 +10,16 @@ import (
 
 	"github.com/andygrunwald/go-jira"
 	"github.com/apex/gateway"
+	"github.com/aws/aws-xray-sdk-go/xray"
 	"github.com/gorilla/mux"
 	"github.com/secrethub/secrethub-go/pkg/secrethub"
 )
 
 var (
-	username  string
-	password  string
-	sha1ver   string // INFO: sha1 revision used to build the program
-	buildTime string // INFO: build timestamp of executable
+	jiraUsername string
+	jiraPassword string
+	sha1ver      string
+	buildTime    string
 )
 
 type TicketData struct {
@@ -31,11 +32,11 @@ type TicketData struct {
 func init() {
 	client := secrethub.Must(secrethub.NewClient())
 	var err error
-	username, err = client.Secrets().ReadString("naiduarvind/serializedjira/username")
+	jiraUsername, err = client.Secrets().ReadString("naiduarvind/serializedjira/username")
 	if err != nil {
 		panic(err)
 	}
-	password, err = client.Secrets().ReadString("naiduarvind/serializedjira/password")
+	jiraPassword, err = client.Secrets().ReadString("naiduarvind/serializedjira/password")
 	if err != nil {
 		panic(err)
 	}
@@ -47,7 +48,7 @@ func main() {
 	r.HandleFunc("/", send).Methods("POST")
 	r.HandleFunc("/app/debug", handleDebug).Methods("GET")
 
-	http.Handle("/", r)
+	http.Handle("/", xray.Handler(xray.NewFixedSegmentNamer("SerializedJira"), r))
 	log.Fatal(gateway.ListenAndServe(":3000", nil))
 }
 
@@ -146,8 +147,8 @@ func establishClient() *jira.Client {
 
 	// TODO: temporary creds -- to be replaced with env variables
 	tp := jira.BasicAuthTransport{
-		Username: username,
-		Password: password,
+		Username: jiraUsername,
+		Password: jiraPassword,
 	}
 	jiraClient, err := jira.NewClient(tp.Client(), base)
 	checkError(err)

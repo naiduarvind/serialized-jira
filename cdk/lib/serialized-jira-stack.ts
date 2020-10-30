@@ -61,6 +61,7 @@ export class SerializedJiraStack extends cdk.Stack {
       code: lambda.Code.fromAsset('./../packages/serialized-jira', { exclude: ['*.go', '*.bazel', 'static/**'] }),
       runtime: lambda.Runtime.GO_1_X,
       handler: "main",
+      tracing: lambda.Tracing.ACTIVE,
       environment: {
         SECRETHUB_IDENTITY_PROVIDER: "aws",
       }
