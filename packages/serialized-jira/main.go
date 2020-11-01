@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/aws/aws-xray-sdk-go/xraylog"
 	"html/template"
 	"log"
 	"net/http"
@@ -12,7 +13,6 @@ import (
 	"github.com/andygrunwald/go-jira"
 	"github.com/apex/gateway"
 	"github.com/aws/aws-xray-sdk-go/xray"
-	"github.com/aws/aws-xray-sdk-go/xraylog"
 	"github.com/gorilla/mux"
 	"github.com/secrethub/secrethub-go/pkg/secrethub"
 )
@@ -22,6 +22,8 @@ var (
 	jiraPassword string
 	sha1ver      string
 	buildTime    string
+	err			 error
+ 	jiraClient   *jira.Client
 
 	baseURL = "https://thebilityengineer.atlassian.net"
 	jql 	= "project = TBE and type = Task and Status IN ('In Progress')"
@@ -35,8 +37,18 @@ type TicketData struct {
 }
 
 func init() {
-	var err error
+	// INFO: AWS X-Ray Configuration & Logger Setup
+	err = xray.Configure(xray.Config{
+		ServiceVersion: sha1ver,
+	})
+	if err != nil {
+		panic(err)
+	}
+	xray.SetLogger(xraylog.NewDefaultLogger(os.Stderr, xraylog.LogLevelError))
+}
 
+func init() {
+	// INFO: Retrieval of Secrets using SecretHub Client
 	client := secrethub.Must(secrethub.NewClient())
 	jiraUsername, err = client.Secrets().ReadString("naiduarvind/serializedjira/username")
 	if err != nil {
@@ -46,14 +58,24 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+}
 
-	err = xray.Configure(xray.Config{
-		ServiceVersion: sha1ver,
-	})
-	if err != nil {
-		panic(err)
+func init() {
+	// INFO: Create JIRA client for reuse
+	jiraClient = createJiraClient()
+}
+
+func createJiraClient() *jira.Client {
+	tp := jira.BasicAuthTransport{
+		Username: jiraUsername,
+		Password: jiraPassword,
 	}
-	xray.SetLogger(xraylog.NewDefaultLogger(os.Stderr, xraylog.LogLevelError))
+	client, err := jira.NewClient(tp.Client(), baseURL)
+	if err != nil {
+		log.Panic(err, "Unable to establish a connection to Jira service.")
+	}
+
+	return client
 }
 
 func main() {
@@ -69,7 +91,7 @@ func main() {
 func home(w http.ResponseWriter, r *http.Request) {
 	var td []TicketData
 
-	issues, _, err := establishClient().Issue.Search(jql, nil)
+	issues, _, err := jiraClient.Issue.Search(jql, nil)
 	if err != nil {
 		log.Panic(err, "Unable to perform JQL search in Jira.")
 	}
@@ -151,19 +173,4 @@ func servePlainText(w http.ResponseWriter, s string) {
 	w.Header().Set("Content-Length", strconv.Itoa(len(s)))
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(s))
-}
-
-// TODO: Possibility of moving this block into func init()
-func establishClient() *jira.Client {
-
-	tp := jira.BasicAuthTransport{
-		Username: jiraUsername,
-		Password: jiraPassword,
-	}
-	jiraClient, err := jira.NewClient(tp.Client(), baseURL)
-	if err != nil {
-		log.Panic(err, "Unable to establish a connection to Jira service.")
-	}
-
-	return jiraClient
 }

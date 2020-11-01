@@ -27,7 +27,7 @@ func (tickInfo *ticketInformation) createTicket() error {
 		},
 	}
 
-	_, _, err := establishClient().Issue.Create(&i)
+	_, _, err := jiraClient.Issue.Create(&i)
 	if err != nil {
 		log.Println(err, "Unable to create issue in Jira.")
 	}
