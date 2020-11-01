@@ -5,12 +5,14 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 
 	"github.com/andygrunwald/go-jira"
 	"github.com/apex/gateway"
 	"github.com/aws/aws-xray-sdk-go/xray"
+	"github.com/aws/aws-xray-sdk-go/xraylog"
 	"github.com/gorilla/mux"
 	"github.com/secrethub/secrethub-go/pkg/secrethub"
 )
@@ -20,6 +22,9 @@ var (
 	jiraPassword string
 	sha1ver      string
 	buildTime    string
+
+	baseURL = "https://thebilityengineer.atlassian.net"
+	jql 	= "project = TBE and type = Task and Status IN ('In Progress')"
 )
 
 type TicketData struct {
@@ -30,8 +35,9 @@ type TicketData struct {
 }
 
 func init() {
-	client := secrethub.Must(secrethub.NewClient())
 	var err error
+
+	client := secrethub.Must(secrethub.NewClient())
 	jiraUsername, err = client.Secrets().ReadString("naiduarvind/serializedjira/username")
 	if err != nil {
 		panic(err)
@@ -40,6 +46,14 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+
+	err = xray.Configure(xray.Config{
+		ServiceVersion: sha1ver,
+	})
+	if err != nil {
+		panic(err)
+	}
+	xray.SetLogger(xraylog.NewDefaultLogger(os.Stderr, xraylog.LogLevelError))
 }
 
 func main() {
@@ -48,18 +62,17 @@ func main() {
 	r.HandleFunc("/", send).Methods("POST")
 	r.HandleFunc("/app/debug", handleDebug).Methods("GET")
 
-	http.Handle("/", xray.Handler(xray.NewFixedSegmentNamer("SerializedJira"), r))
+	http.Handle("/", xray.Handler(xray.NewDynamicSegmentNamer("SerializedJIra", "jira.thebility.engineer"), r))
 	log.Fatal(gateway.ListenAndServe(":3000", nil))
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
-
 	var td []TicketData
 
-	jql := "project = TBE and type = Task and Status IN ('In Progress')"
-
 	issues, _, err := establishClient().Issue.Search(jql, nil)
-	checkError(err)
+	if err != nil {
+		log.Panic(err, "Unable to perform JQL search in Jira.")
+	}
 
 	for _, issue := range issues {
 		td = append(td, TicketData{
@@ -67,7 +80,6 @@ func home(w http.ResponseWriter, r *http.Request) {
 			issue.Fields.Description,
 			strings.Trim(fmt.Sprint(issue.Fields.Labels), "[]"),
 			issue.Fields.Progress.Percent})
-		checkError(err)
 	}
 
 	w.Header().Set("Content-Type", "text/html")
@@ -143,22 +155,15 @@ func servePlainText(w http.ResponseWriter, s string) {
 
 // TODO: Possibility of moving this block into func init()
 func establishClient() *jira.Client {
-	base := "https://thebilityengineer.atlassian.net"
 
-	// TODO: temporary creds -- to be replaced with env variables
 	tp := jira.BasicAuthTransport{
 		Username: jiraUsername,
 		Password: jiraPassword,
 	}
-	jiraClient, err := jira.NewClient(tp.Client(), base)
-	checkError(err)
+	jiraClient, err := jira.NewClient(tp.Client(), baseURL)
+	if err != nil {
+		log.Panic(err, "Unable to establish a connection to Jira service.")
+	}
 
 	return jiraClient
-}
-
-// TODO: Remove this block
-func checkError(err error) {
-	if err != nil {
-		log.Panic(err)
-	}
 }

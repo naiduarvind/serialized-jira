@@ -84,6 +84,9 @@ export class SerializedJiraStack extends cdk.Stack {
 
     const apiGw = new apigw.LambdaRestApi(this, "SerializedJiraAPIEndpoint", {
       handler: lambdaFn,
+      deployOptions: {
+        tracingEnabled: true,
+      }
     });
 
     customDomain.addBasePathMapping(apiGw);

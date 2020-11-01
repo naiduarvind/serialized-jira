@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/andygrunwald/go-jira"
+	"log"
 )
 
 type ticketInformation struct {
@@ -27,7 +28,9 @@ func (tickInfo *ticketInformation) createTicket() error {
 	}
 
 	_, _, err := establishClient().Issue.Create(&i)
-	checkError(err)
+	if err != nil {
+		log.Println(err, "Unable to create issue in Jira.")
+	}
 
 	return err
 }
