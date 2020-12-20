@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/aws/aws-xray-sdk-go/xraylog"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 	"strings"
+
+	"github.com/aws/aws-xray-sdk-go/xraylog"
 
 	"github.com/andygrunwald/go-jira"
 	"github.com/apex/gateway"
@@ -18,17 +18,16 @@ import (
 )
 
 var (
+	err          error
 	jiraUsername string
 	jiraPassword string
-	sha1ver      string
-	buildTime    string
-	err			 error
- 	jiraClient   *jira.Client
+	jiraClient   *jira.Client
 
 	baseURL = "https://thebilityengineer.atlassian.net"
-	jql 	= "project = TBE and type = Task and Status IN ('In Progress')"
+	jql     = "project = TBE and type = Task and Status IN ('In Progress')"
 )
 
+// TODO: Move into message.go
 type TicketData struct {
 	TicketSummary     string
 	TicketDescription string
@@ -104,6 +103,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 			issue.Fields.Progress.Percent})
 	}
 
+	// TODO: Abstract writing headers separately
 	w.Header().Set("Content-Type", "text/html")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	render(w, "templates/index.html", td)
@@ -122,12 +122,14 @@ func send(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// TODO: Abstract writing headers separately
 	w.Header().Set("Content-Type", "text/html")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	http.Redirect(w, r, "/", http.StatusMovedPermanently)
 }
 
 func render(w http.ResponseWriter, filename string, data interface{}) {
+	// TODO: Abstract writing headers separately
 	w.Header().Set("Content-Type", "text/html")
 	tmpl, err := template.ParseFiles(filename)
 	if err != nil {
@@ -139,38 +141,4 @@ func render(w http.ResponseWriter, filename string, data interface{}) {
 		log.Println(err)
 		http.Error(w, "Sorry, something went wrong", http.StatusInternalServerError)
 	}
-}
-
-func handleDebug(w http.ResponseWriter, r *http.Request) {
-	s := fmt.Sprintf("url: %s %s", r.Method, r.RequestURI)
-	a := []string{s}
-
-	a = append(a, "Headers:")
-	for k, v := range r.Header {
-		if len(v) == 0 {
-			a = append(a, k)
-		} else if len(v) == 1 {
-			s = fmt.Sprintf("  %s: %v", k, v[0])
-			a = append(a, s)
-		} else {
-			a = append(a, "  "+k+":")
-			for _, v2 := range v {
-				a = append(a, "    "+v2)
-			}
-		}
-	}
-
-	a = append(a, "")
-	a = append(a, fmt.Sprintf("ver: https://github.com/naiduarvind/serialized-jira/commit/%s", sha1ver))
-	a = append(a, fmt.Sprintf("built on: %s", buildTime))
-
-	s = strings.Join(a, "\n")
-	servePlainText(w, s)
-}
-
-func servePlainText(w http.ResponseWriter, s string) {
-	w.Header().Set("Content-Type", "text/plain")
-	w.Header().Set("Content-Length", strconv.Itoa(len(s)))
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(s))
 }
